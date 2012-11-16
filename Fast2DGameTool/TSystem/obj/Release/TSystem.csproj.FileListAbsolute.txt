@@ -1,0 +1,12 @@
+E:\Android\Work\binary\tool\TSystem.dll.config
+E:\Android\Work\binary\tool\TSystem.dll
+E:\Android\Work\binary\tool\TSystem.pdb
+E:\Android\Work\cocos2d\Fast2DGameTool\TSystem\obj\Release\ResolveAssemblyReference.cache
+E:\Android\Work\cocos2d\Fast2DGameTool\TSystem\obj\Release\TSystem.dll
+E:\Android\Work\cocos2d\Fast2DGameTool\TSystem\obj\Release\TSystem.pdb
+E:\git\binary\tool\TSystem.dll.config
+E:\git\binary\tool\TSystem.dll
+E:\git\binary\tool\TSystem.pdb
+E:\git\eplib\Fast2DGameTool\TSystem\obj\Release\ResolveAssemblyReference.cache
+E:\git\eplib\Fast2DGameTool\TSystem\obj\Release\TSystem.dll
+E:\git\eplib\Fast2DGameTool\TSystem\obj\Release\TSystem.pdb
