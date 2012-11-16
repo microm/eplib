@@ -1,0 +1,7 @@
+# git ignore file
+
+#project File
+*.user
+*.suo
+*.pdb
+obj/
