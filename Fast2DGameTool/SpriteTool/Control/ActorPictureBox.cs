@@ -13,12 +13,11 @@ using Tool.TSystem;
 
 namespace SpriteTool.Control
 {
-    public class ActorPictureBox : PictureBox
+    public class EditPictureBox : PictureBox
     {
         public const int _controlID = 6;
 
         private Main m_main;
-        private ActorForm m_parentsForm;
         private Pen m_linePen = new Pen(Brushes.Black);
         
         private bool m_bPlay = false;
@@ -34,10 +33,25 @@ namespace SpriteTool.Control
 
         private Pen m_regionPen = new Pen(Brushes.Black);
         private bool m_drag = false;
-
-        private bool m_bGuidLine = true;
+        private bool m_bModify = false;
         
-        public ActorPictureBox()
+        private bool m_bGuidLine = true;
+        private int m_guidTabSize = 20;
+
+        public int GuidTabSize
+        {
+            get { return m_guidTabSize; }
+            set { 
+                m_guidTabSize = value;                
+            }
+        }
+
+        public bool Modify
+        {
+            get { return m_bModify; }
+        }
+
+        public EditPictureBox()
         {
             SetStyle(ControlStyles.Selectable, true);
             BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
@@ -46,9 +60,8 @@ namespace SpriteTool.Control
             m_regionPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
         }
 
-        internal void Init( ActorForm form, Main main)
+        internal void Init( Main main )
         {
-            m_parentsForm = form;
             m_main = main;
             if (m_dImage == null)
             {
@@ -191,7 +204,7 @@ namespace SpriteTool.Control
                     m_actorInfo.Anchors.Remove(m_selectAnchor);
                     m_selectAnchor = null;
 
-                    m_parentsForm.Modify = true;
+                    m_bModify = true;
                     UpdateAnchor();
                 }
             }
@@ -211,7 +224,7 @@ namespace SpriteTool.Control
 
                 m_selectAnchor.Offset = newOffset;
 
-                m_parentsForm.Modify = true;
+                m_bModify = true;
             }
             Invalidate();
         }
@@ -292,13 +305,13 @@ namespace SpriteTool.Control
             grfx.DrawLine(penStroke, new Point(0, m_center.Y), new Point(Width, m_center.Y));
             grfx.DrawLine(penStroke, new Point(m_center.X, 0), new Point(m_center.X, Height));
 
-            for (int x = 20; x < m_center.X; x += 20)
+            for (int x = m_guidTabSize; x < m_center.X; x += m_guidTabSize)
             {
                 grfx.DrawLine(penThin, new Point(m_center.X - x, 0), new Point(m_center.X - x, Height));
                 grfx.DrawLine(penThin, new Point(m_center.X + x, 0), new Point(m_center.X + x, Height));
             }
 
-            for (int y = 20; y < m_center.Y; y += 20)
+            for (int y = m_guidTabSize; y < m_center.Y; y += m_guidTabSize)
             {
                 grfx.DrawLine(penThin, new Point(0, m_center.Y -y), new Point(Width, m_center.Y-y));
                 grfx.DrawLine(penThin, new Point(0, m_center.Y+y), new Point(Width, m_center.Y+y ));

@@ -12,7 +12,7 @@ using System.Drawing;
 
 namespace SpriteTool
 {
-    internal class Main
+    public class Main
     {
         private readonly MainForm m_form;
         private readonly IBrowser m_browser;

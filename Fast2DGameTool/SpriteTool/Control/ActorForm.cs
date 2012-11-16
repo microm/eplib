@@ -29,7 +29,7 @@ namespace SpriteTool.Control
         internal void Init(Main main)
         {
             m_main = main;
-            prevPictrue.Init(this,m_main);
+            prevPictrue.Init(m_main);
         }
 
         public bool Modify

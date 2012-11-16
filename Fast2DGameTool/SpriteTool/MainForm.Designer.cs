@@ -67,6 +67,7 @@ namespace SpriteTool
             this.ListPanel = new SpriteTool.Control.ListPicPanel();
             this.RightCtrl = new SpriteTool.Control.AniSpriteCtrl();
             this.colorDialog1 = new System.Windows.Forms.ColorDialog();
+            this.toolStripStageButton = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -236,26 +237,26 @@ namespace SpriteTool
             this.guidLineToolStripMenuItem.Checked = true;
             this.guidLineToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.guidLineToolStripMenuItem.Name = "guidLineToolStripMenuItem";
-            this.guidLineToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.guidLineToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.guidLineToolStripMenuItem.Text = "Guide Line";
             this.guidLineToolStripMenuItem.Click += new System.EventHandler(this.guidLineToolStripMenuItem_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(128, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(149, 6);
             // 
             // lineColorToolStripMenuItem
             // 
             this.lineColorToolStripMenuItem.Name = "lineColorToolStripMenuItem";
-            this.lineColorToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.lineColorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.lineColorToolStripMenuItem.Text = "LineColor";
             this.lineColorToolStripMenuItem.Click += new System.EventHandler(this.lineColorToolStripMenuItem_Click);
             // 
             // backColorToolStripMenuItem
             // 
             this.backColorToolStripMenuItem.Name = "backColorToolStripMenuItem";
-            this.backColorToolStripMenuItem.Size = new System.Drawing.Size(131, 22);
+            this.backColorToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.backColorToolStripMenuItem.Text = "BackColor";
             this.backColorToolStripMenuItem.Click += new System.EventHandler(this.backColorToolStripMenuItem_Click);
             // 
@@ -280,6 +281,7 @@ namespace SpriteTool
             this.toolStripBtnImage,
             this.toolStripBtnSave,
             this.actorButton,
+            this.toolStripStageButton,
             this.toolStripBtnLineColor});
             this.toolStrip1.Location = new System.Drawing.Point(0, 24);
             this.toolStrip1.Name = "toolStrip1";
@@ -399,6 +401,15 @@ namespace SpriteTool
             this.RightCtrl.Size = new System.Drawing.Size(213, 655);
             this.RightCtrl.TabIndex = 0;
             // 
+            // toolStripStageButton
+            // 
+            this.toolStripStageButton.Image = ((System.Drawing.Image)(resources.GetObject("toolStripStageButton.Image")));
+            this.toolStripStageButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripStageButton.Name = "toolStripStageButton";
+            this.toolStripStageButton.Size = new System.Drawing.Size(57, 22);
+            this.toolStripStageButton.Text = "Stage";
+            this.toolStripStageButton.Click += new System.EventHandler(this.toolStripStageButton_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -471,6 +482,7 @@ namespace SpriteTool
         private System.Windows.Forms.ToolStripMenuItem selectRegionToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton actorButton;
         private System.Windows.Forms.ToolStripMenuItem imageCleanToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolStripStageButton;
     }
 }
 

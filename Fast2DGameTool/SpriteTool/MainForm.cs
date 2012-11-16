@@ -57,7 +57,6 @@ namespace SpriteTool
 
             m_main = new Main(this);
 
-
             RightCtrl.Init(m_main);
             SplitPic.Init(m_main);
             ListPanel.Init(m_main);
@@ -262,13 +261,7 @@ namespace SpriteTool
             this.Cursor = Cursors.Arrow;
         }
 
-        private void actorButton_Click(object sender, EventArgs e)
-        {
-            ActorForm actorEditor = new ActorForm();
-            actorEditor.Init(m_main);
-            actorEditor.SelectActor("");
-            actorEditor.ShowDialog();            
-        }
+      
 
         private void imageCleanToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -296,6 +289,22 @@ namespace SpriteTool
 
             RightCtrl.UpdateTreeView();
             m_main.UpdateSprite();
+        }
+
+        private void actorButton_Click(object sender, EventArgs e)
+        {
+            ActorForm actorEditor = new ActorForm();
+            actorEditor.Init(m_main);
+            actorEditor.SelectActor("");
+            actorEditor.ShowDialog();
+        }
+
+        private void toolStripStageButton_Click(object sender, EventArgs e)
+        {
+            ActorForm actorEditor = new ActorForm();
+            actorEditor.Init(m_main);
+            actorEditor.SelectActor("");
+            actorEditor.ShowDialog();
         }
 
 

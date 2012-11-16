@@ -40,7 +40,7 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.chkGuide = new System.Windows.Forms.CheckBox();
-            this.prevPictrue = new SpriteTool.Control.ActorPictureBox();
+            this.prevPictrue = new SpriteTool.Control.EditPictureBox();
             this.anchorPropertyGrid = new System.Windows.Forms.PropertyGrid();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
@@ -229,7 +229,7 @@
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.ListBox listActor;
-        private ActorPictureBox prevPictrue;
+        private EditPictureBox prevPictrue;
         private System.Windows.Forms.TrackBar trackBar1;
         private System.Windows.Forms.Button btnPlay;
         private System.Windows.Forms.StatusStrip statusStrip1;

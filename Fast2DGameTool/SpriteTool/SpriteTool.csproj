@@ -40,7 +40,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>..\..\bin\</OutputPath>
@@ -88,6 +88,12 @@
     <Compile Include="Control\SelectRegionForm.Designer.cs">
       <DependentUpon>SelectRegionForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Control\StageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Control\StageForm.Designer.cs">
+      <DependentUpon>StageForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Data\ActorInfo.cs" />
     <Compile Include="Data\ActorList.cs" />
     <Compile Include="Data\SpriteMap.cs" />
@@ -129,6 +135,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Control\SelectRegionForm.resx">
       <DependentUpon>SelectRegionForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Control\StageForm.resx">
+      <DependentUpon>StageForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

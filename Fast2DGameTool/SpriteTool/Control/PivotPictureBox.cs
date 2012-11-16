@@ -39,7 +39,8 @@ namespace SpriteTool.Control
             get { return m_index; }
             set {
                 m_index = value;
-
+                if (CurrentImage == null)
+                    return;
                 UpdateSprite();
             }
         }
