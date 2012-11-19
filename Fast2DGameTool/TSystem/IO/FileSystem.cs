@@ -95,7 +95,7 @@ namespace Tool.TSystem.IO
 
             for (int i = 0; i < subFiles.Count; ++i)
             {
-                subFiles[i] = subFiles[i].Substring(skipLength);
+                subFiles[i] = subFiles[i].Substring(skipLength-1);
             }
 
 

@@ -7,7 +7,6 @@ using System.Drawing.Imaging;
 using SpriteTool.Data;
 using System.Collections.Generic;
 using Tool.TSystem;
-using TPoint = Tool.TSystem.Primitive.Point;
 
 namespace SpriteTool.Control
 {
@@ -74,7 +73,7 @@ namespace SpriteTool.Control
                 
         public bool LoadPath(string fileName)
         {
-            string path = ( (SpriteMap.E_Entity) m_main.SpritesMap.SelectCate ).ToString() + "/" + fileName;
+            string path = fileName;// ( (SpriteMap.E_Entity) m_main.SpritesMap.SelectCate ).ToString() + "/"
             path = m_main.Browser.GetFileFullPath(IODataType.Image, path);
 
             Init();

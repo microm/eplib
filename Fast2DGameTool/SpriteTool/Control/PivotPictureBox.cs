@@ -6,7 +6,7 @@ using Tool.TSystem.ImageMaker;
 using System.Drawing.Imaging;
 using SpriteTool.Data;
 using System.Collections.Generic;
-using TPoint = Tool.TSystem.Primitive.Point;
+using Tool.TSystem.Primitive;
 
 namespace SpriteTool.Control
 {
@@ -14,12 +14,17 @@ namespace SpriteTool.Control
     {
         public const int _controlID = 4;
 
-        private Main m_main;
-        
+        private Main m_main;        
         
         private Point m_startPos = new Point(0,0);
         private bool m_bPlay = false;
         private int m_index = 0;
+        private ImgData m_selectImgData;
+
+        public ImgData SelectImgData
+        {
+            get { return m_selectImgData; }
+        }
 
         public PivotPictureBox()
         {
@@ -41,6 +46,8 @@ namespace SpriteTool.Control
                 m_index = value;
                 if (CurrentImage == null)
                     return;
+
+                
                 UpdateSprite();
             }
         }
@@ -94,30 +101,17 @@ namespace SpriteTool.Control
                 return;
 
             TPoint newPivot = new TPoint( e.X - m_startPos.X , e.Y - m_startPos.Y );
-            m_main.SelectSprite.ImgList[m_index].Pivot = newPivot;
+            m_selectImgData.Pivot = newPivot;
 
-            UpdateSprite();
-        }
-
-        public void SetCenterPivot()
-        {
-            if (CurrentImage == null)
-                return;
-
-            TPoint center = new TPoint(m_main.ImageList[m_index].Width / 2, m_main.ImageList[m_index].Height / 2);
-            m_main.SelectSprite.ImgList[m_index].Pivot = center;
-
-            UpdateSprite();
+            Invalidate();
         }
 
         public void UpdateSprite()
         {
-            if (CurrentImage == null)
+            if (m_selectImgData == m_main.SelectSprite.ImgList[m_index])
                 return;
-            Point center = new Point(Width / 2, Height / 2);
 
-            m_startPos = new Point( center.X - m_main.SelectSprite.ImgList[m_index].Pivot.X ,
-                center.Y - m_main.SelectSprite.ImgList[m_index].Pivot.Y );
+            m_selectImgData = m_main.SelectSprite.ImgList[m_index];          
 
             Invalidate();
         }
@@ -153,7 +147,7 @@ namespace SpriteTool.Control
                 attr.SetColorKey(m_main.SelectSprite.ColorKey, m_main.SelectSprite.ColorKey);
             }
             Point center = new Point(Width / 2, Height / 2);
-
+            m_startPos = new Point(center.X - m_selectImgData.Pivot.X,       center.Y - m_selectImgData.Pivot.Y);
             Bitmap curImage = m_main.ImageList[m_index];
 
             grfx.DrawImage(curImage, new Rectangle(m_startPos.X, m_startPos.Y, curImage.Width, curImage.Height),

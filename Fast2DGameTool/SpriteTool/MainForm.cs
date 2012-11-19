@@ -8,10 +8,10 @@ using System.Text;
 using System.Windows.Forms;
 using SpriteTool.Control;
 using Tool.TSystem.Assist;
-using TPoint = Tool.TSystem.Primitive.Point;
 using Tool.TSystem;
 using System.IO;
 using SpriteTool.Data;
+using Tool.TSystem.Primitive;
 
 namespace SpriteTool
 {
@@ -271,8 +271,7 @@ namespace SpriteTool
             {
                 foreach (SpriteInfo sprite in m_main.SpritesMap.SpriteUnits[cate])
                 {
-                    string path = ((SpriteMap.E_Entity)cate).ToString() + "/" + sprite.Path;
-                    if (m_main.Browser.Exists(IODataType.Image, path) == false )
+                    if (m_main.Browser.Exists(IODataType.Image, sprite.Path) == false )
                     {
                         removeList.Add( sprite );
                         ++count;
@@ -301,10 +300,9 @@ namespace SpriteTool
 
         private void toolStripStageButton_Click(object sender, EventArgs e)
         {
-            ActorForm actorEditor = new ActorForm();
-            actorEditor.Init(m_main);
-            actorEditor.SelectActor("");
-            actorEditor.ShowDialog();
+            StageForm stageEditor = new StageForm();
+            stageEditor.Init(m_main);
+            stageEditor.Show();
         }
 
 

@@ -14,7 +14,7 @@ namespace Tool.TSystem.Basis
 
 		public MouseEvent MouseMove(MouseEventArgs e)
 		{
-			MouseEvent.MouseInfo mouseInfo = new MouseEvent.MouseInfo(false, false, new Point(e.X, e.Y));
+			MouseEvent.MouseInfo mouseInfo = new MouseEvent.MouseInfo(false, false, new TPoint(e.X, e.Y));
 			InheritButtonStatesFromPreviousMouseEvent(ref mouseInfo);
 
 			MouseEvent mouseEvent = new MouseEvent(MouseEvent.EventState.Move, mouseInfo, m_previousEvent.Info.position);
@@ -24,7 +24,7 @@ namespace Tool.TSystem.Basis
 		
 		public MouseEvent MouseDown(MouseEventArgs e)
 		{
-			MouseEvent.MouseInfo mouseInfo = new MouseEvent.MouseInfo(false, false, new Point(e.X, e.Y));
+			MouseEvent.MouseInfo mouseInfo = new MouseEvent.MouseInfo(false, false, new TPoint(e.X, e.Y));
 			InheritButtonStatesFromPreviousMouseEvent(ref mouseInfo);
 
 			if (e.Button == MouseButtons.Left)
@@ -64,7 +64,7 @@ namespace Tool.TSystem.Basis
 
 		public MouseEvent MouseUp(MouseEventArgs e)
 		{
-			MouseEvent.MouseInfo mouseInfo = new MouseEvent.MouseInfo(false, false, new Point(e.X, e.Y));
+			MouseEvent.MouseInfo mouseInfo = new MouseEvent.MouseInfo(false, false, new TPoint(e.X, e.Y));
 			InheritButtonStatesFromPreviousMouseEvent(ref mouseInfo);
 
 			if (e.Button == MouseButtons.Left)
@@ -94,7 +94,7 @@ namespace Tool.TSystem.Basis
 
 		public MouseEvent MouseWheel(MouseEventArgs e)
 		{
-			MouseEvent.MouseInfo mouseInfo = new MouseEvent.MouseInfo(false, false, false, new Point(e.X, e.Y), e.Delta);
+			MouseEvent.MouseInfo mouseInfo = new MouseEvent.MouseInfo(false, false, false, new TPoint(e.X, e.Y), e.Delta);
 			InheritButtonStatesFromPreviousMouseEvent(ref mouseInfo);
 			MouseEvent mouseEvent = new MouseEvent(MouseEvent.EventState.Wheel, mouseInfo);
 			m_previousEvent = mouseEvent;

@@ -9,6 +9,7 @@ using SpriteTool.Data;
 using System.Xml;
 using Tool.TSystem;
 using System.Drawing;
+using Tool.TSystem.ImageMaker;
 
 namespace SpriteTool
 {
@@ -27,7 +28,14 @@ namespace SpriteTool
 
         private string m_spriteFileName = "spritemap.xml";
         private string m_actorFileName = "actorlist.xml";
-        
+
+        private DevImage m_devImage;
+
+        public DevImage DevImage
+        {
+            get { return m_devImage; }
+        }
+
         public SpriteTool.Data.SpriteMap SpriteMap
         {
             get { return m_spriteMap; }
@@ -64,7 +72,7 @@ namespace SpriteTool
             get { return m_spriteMap; }
         }
 
-        public ActorList ActorList
+        public ActorList Actors
         {
             get { return m_actorList; }
         }
@@ -84,6 +92,7 @@ namespace SpriteTool
         public Main(MainForm form)
         {
             m_form = form;
+            m_devImage = new DevImage(100, 100);
                        
             m_browser = new Browser();
             m_linePen.Color = Form.LineColor;
@@ -113,13 +122,10 @@ namespace SpriteTool
         {
             Stream stream = m_browser.Write(IODataType.Script, filepath);
             XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8);
-            writer.Formatting = Formatting.Indented;
-            writer.WriteStartElement("SpriteList");
-            GenericXmlWriter.WriteAttribute(writer, "version", m_spriteMap._version);
-
-            m_spriteMap.Write(writer);
-
-            writer.WriteEndElement();
+            writer.Formatting = Formatting.Indented;           
+           
+            m_spriteMap.Write(writer);        
+            
             writer.Flush();
             stream.Close();
         }
@@ -140,16 +146,8 @@ namespace SpriteTool
             XmlTextWriter writer = new XmlTextWriter(stream, Encoding.UTF8);
             writer.Formatting = Formatting.Indented;
 
-            //Write the ProcessingInstruction node.
-            //String PItext = "type='text/xsl' href='book.xsl'";
-            //writer.WriteProcessingInstruction("xml-stylesheet", PItext);
+            m_actorList.Write(writer);            
 
-            writer.WriteStartElement("ActorList");
-            GenericXmlWriter.WriteAttribute(writer, "version", m_actorList._version);
-
-            m_actorList.Write(writer);
-
-            writer.WriteEndElement();
             writer.Flush();
             stream.Close();
         }

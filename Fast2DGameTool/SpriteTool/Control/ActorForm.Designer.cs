@@ -28,7 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.anchorPropertyGrid = new SpriteTool.Control.PropertyGridEx(this.components);
             this.btnSave = new System.Windows.Forms.Button();
             this.btnAddImg = new System.Windows.Forms.Button();
             this.listRegion = new System.Windows.Forms.ListBox();
@@ -41,7 +43,7 @@
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.chkGuide = new System.Windows.Forms.CheckBox();
             this.prevPictrue = new SpriteTool.Control.EditPictureBox();
-            this.anchorPropertyGrid = new System.Windows.Forms.PropertyGrid();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
             this.statusStrip1.SuspendLayout();
@@ -63,6 +65,16 @@
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Information";
+            // 
+            // anchorPropertyGrid
+            // 
+            this.anchorPropertyGrid.HelpVisible = false;
+            this.anchorPropertyGrid.Location = new System.Drawing.Point(6, 340);
+            this.anchorPropertyGrid.Name = "anchorPropertyGrid";
+            this.anchorPropertyGrid.Size = new System.Drawing.Size(220, 130);
+            this.anchorPropertyGrid.TabIndex = 6;
+            this.anchorPropertyGrid.ToolbarVisible = false;
+            this.anchorPropertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.anchorPropertyGrid_PropertyValueChanged);
             // 
             // btnSave
             // 
@@ -178,30 +190,35 @@
             this.prevPictrue.BackColor = System.Drawing.Color.White;
             this.prevPictrue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.prevPictrue.GuidLine = true;
+            this.prevPictrue.GuidTabSize = 20;
             this.prevPictrue.Location = new System.Drawing.Point(268, 54);
             this.prevPictrue.Name = "prevPictrue";
             this.prevPictrue.Play = false;
+            this.prevPictrue.SelectAnchor = null;
             this.prevPictrue.Size = new System.Drawing.Size(427, 414);
             this.prevPictrue.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.prevPictrue.TabIndex = 1;
             this.prevPictrue.TabStop = false;
+            this.prevPictrue.MouseDown += new System.Windows.Forms.MouseEventHandler(this.prevPictrue_MouseDown);
             this.prevPictrue.MouseMove += new System.Windows.Forms.MouseEventHandler(this.prevPictrue_MouseMove);
+            this.prevPictrue.MouseUp += new System.Windows.Forms.MouseEventHandler(this.prevPictrue_MouseUp);
+            this.prevPictrue.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.prevPictrue_PreviewKeyDown);
             // 
-            // anchorPropertyGrid
+            // label1
             // 
-            this.anchorPropertyGrid.HelpVisible = false;
-            this.anchorPropertyGrid.Location = new System.Drawing.Point(6, 340);
-            this.anchorPropertyGrid.Name = "anchorPropertyGrid";
-            this.anchorPropertyGrid.Size = new System.Drawing.Size(220, 130);
-            this.anchorPropertyGrid.TabIndex = 6;
-            this.anchorPropertyGrid.ToolbarVisible = false;
-            this.anchorPropertyGrid.Click += new System.EventHandler(this.anchorPropertyGrid_Click);
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(272, 478);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(189, 12);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "[+] 이미지 위로 [-]이미지 아래로";
             // 
             // ActorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(722, 529);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.chkGuide);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.btnPlay);
@@ -238,6 +255,7 @@
         private System.Windows.Forms.Button btnAddImg;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.CheckBox chkGuide;
-        private System.Windows.Forms.PropertyGrid anchorPropertyGrid;
+        private PropertyGridEx  anchorPropertyGrid;
+        private System.Windows.Forms.Label label1;
     }
 }

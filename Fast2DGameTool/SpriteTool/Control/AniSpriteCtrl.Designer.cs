@@ -45,8 +45,8 @@ namespace SpriteTool.Control
             this.spriteTreeView = new System.Windows.Forms.TreeView();
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cmbAnchor = new System.Windows.Forms.ComboBox();
             this.btnActorCreate = new System.Windows.Forms.Button();
-            this.btnStop = new System.Windows.Forms.Button();
             this.btnPlay = new System.Windows.Forms.Button();
             this.pivotPic = new SpriteTool.Control.PivotPictureBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
@@ -196,21 +196,30 @@ namespace SpriteTool.Control
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cmbAnchor);
             this.groupBox1.Controls.Add(this.btnActorCreate);
-            this.groupBox1.Controls.Add(this.btnStop);
             this.groupBox1.Controls.Add(this.btnPlay);
             this.groupBox1.Controls.Add(this.pivotPic);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Top;
             this.groupBox1.Location = new System.Drawing.Point(0, 405);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(209, 218);
+            this.groupBox1.Size = new System.Drawing.Size(209, 233);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Preview";
             // 
+            // cmbAnchor
+            // 
+            this.cmbAnchor.FormattingEnabled = true;
+            this.cmbAnchor.Location = new System.Drawing.Point(6, 180);
+            this.cmbAnchor.Name = "cmbAnchor";
+            this.cmbAnchor.Size = new System.Drawing.Size(74, 20);
+            this.cmbAnchor.TabIndex = 5;
+            this.cmbAnchor.SelectedIndexChanged += new System.EventHandler(this.cmbAnchor_SelectedIndexChanged);
+            // 
             // btnActorCreate
             // 
-            this.btnActorCreate.Location = new System.Drawing.Point(3, 176);
+            this.btnActorCreate.Location = new System.Drawing.Point(86, 176);
             this.btnActorCreate.Name = "btnActorCreate";
             this.btnActorCreate.Size = new System.Drawing.Size(68, 26);
             this.btnActorCreate.TabIndex = 3;
@@ -218,19 +227,9 @@ namespace SpriteTool.Control
             this.btnActorCreate.UseVisualStyleBackColor = true;
             this.btnActorCreate.Click += new System.EventHandler(this.btnActorCreate_Click);
             // 
-            // btnStop
-            // 
-            this.btnStop.Location = new System.Drawing.Point(155, 176);
-            this.btnStop.Name = "btnStop";
-            this.btnStop.Size = new System.Drawing.Size(48, 26);
-            this.btnStop.TabIndex = 2;
-            this.btnStop.Text = "Stop";
-            this.btnStop.UseVisualStyleBackColor = true;
-            this.btnStop.Click += new System.EventHandler(this.btnStop_Click);
-            // 
             // btnPlay
             // 
-            this.btnPlay.Location = new System.Drawing.Point(106, 176);
+            this.btnPlay.Location = new System.Drawing.Point(160, 176);
             this.btnPlay.Name = "btnPlay";
             this.btnPlay.Size = new System.Drawing.Size(43, 26);
             this.btnPlay.TabIndex = 1;
@@ -283,7 +282,6 @@ namespace SpriteTool.Control
         private System.Windows.Forms.TextBox txtFrame;
         private PivotPictureBox pivotPic;
         private System.Windows.Forms.CheckBox chkColorKey;
-        private System.Windows.Forms.Button btnStop;
         private System.Windows.Forms.Button btnPlay;
         private System.Windows.Forms.Panel colorKeyPanel;
         private System.Windows.Forms.ImageList imageList1;
@@ -293,5 +291,6 @@ namespace SpriteTool.Control
         private System.Windows.Forms.Button btnRename;
         private System.Windows.Forms.CheckBox chkParts;
         private System.Windows.Forms.Button btnActorCreate;
+        private System.Windows.Forms.ComboBox cmbAnchor;
     }
 }

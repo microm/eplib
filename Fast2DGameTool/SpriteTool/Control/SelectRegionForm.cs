@@ -6,7 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using TPoint = Tool.TSystem.Primitive.Point;
+using Tool.TSystem.Primitive;
 
 namespace SpriteTool.Control
 {

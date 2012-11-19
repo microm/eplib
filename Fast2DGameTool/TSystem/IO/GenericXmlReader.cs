@@ -4,7 +4,6 @@ using System.IO;
 using System.Xml;
 using Tool.TSystem.Primitive;
 using System.Drawing;
-using TPoint = Tool.TSystem.Primitive.Point;
 
 namespace Tool.TSystem.IO
 {

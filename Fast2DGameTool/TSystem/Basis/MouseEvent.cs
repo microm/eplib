@@ -29,20 +29,20 @@ namespace Tool.TSystem.Basis
 			public bool leftButton;
 			public bool rightButton;
 		    public bool middleButton;
-			public Point position;
+			public TPoint position;
 			public int delta;
 
-			public MouseInfo(bool leftButton, bool rightButton, Point position)
+			public MouseInfo(bool leftButton, bool rightButton, TPoint position)
 				: this(leftButton, false, rightButton, position, 0)
 			{
 			}
 
-            public MouseInfo(bool leftButton,bool middleButton, bool rightButton, Point position)
+            public MouseInfo(bool leftButton,bool middleButton, bool rightButton, TPoint position)
 				: this(leftButton, middleButton, rightButton, position, 0)
             {
             }
 
-			public MouseInfo(bool leftButton, bool middleButton, bool rightButton, Point position, int delta)
+			public MouseInfo(bool leftButton, bool middleButton, bool rightButton, TPoint position, int delta)
 			{
 				this.leftButton = leftButton;
 				this.middleButton = middleButton;
@@ -53,10 +53,10 @@ namespace Tool.TSystem.Basis
 		}
 
 		private MouseInfo m_curInfo = new MouseInfo();
-        private Point m_previousPosition = new Point(0,0);
+        private TPoint m_previousPosition = new TPoint(0,0);
 		private EventState m_state;
 
-		public MouseEvent(EventState eventState, MouseInfo mouseInfo, Point previousPosition)
+		public MouseEvent(EventState eventState, MouseInfo mouseInfo, TPoint previousPosition)
 		{
 			m_curInfo = mouseInfo;
 			m_state = eventState;
@@ -64,12 +64,12 @@ namespace Tool.TSystem.Basis
 		}
 
 		public MouseEvent(EventState eventState, MouseInfo mouseInfo)
-			: this(eventState, mouseInfo, new Point(0, 0))
+			: this(eventState, mouseInfo, new TPoint(0, 0))
 		{
 		}
 
         public MouseEvent()
-			: this(EventState.Move, new MouseInfo(false, false, new Point(0, 0)), new Point(0, 0))
+			: this(EventState.Move, new MouseInfo(false, false, new TPoint(0, 0)), new TPoint(0, 0))
         {
         }
 
@@ -85,7 +85,7 @@ namespace Tool.TSystem.Basis
 			set { m_state = value; }
 		}
 
-	    public Point PreviousPosition
+	    public TPoint PreviousPosition
 	    {
 	        get { return m_previousPosition; }
 	    }

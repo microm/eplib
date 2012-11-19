@@ -6,7 +6,7 @@ namespace Tool.TSystem.Interface
     public class DragInfo
     {
         private UInt32 m_ownerID;
-        private Point m_startPos;
+        private TPoint m_startPos;
         private bool m_isStart = false;
         private E_MOUSEDRAG m_type = E_MOUSEDRAG.NONE;
         private E_MOUSEBUTTON m_button = E_MOUSEBUTTON.NO;
@@ -17,7 +17,7 @@ namespace Tool.TSystem.Interface
             set { m_ownerID = value; }
         }
 
-        public Point StartPos
+        public TPoint StartPos
         {
             get { return m_startPos; }
             set { m_startPos = value; }

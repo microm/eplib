@@ -10,7 +10,7 @@ namespace Tool.TSystem.ImageMaker
 	public class DevImage : Image
 	{
 		private PixelFormat m_pixelFormat = PixelFormat.Format32bppArgb;
-        
+        private string m_path;
 		static DevImage()
 		{
             if (DevilAPI.ilGetInteger((int)IL_Values.VERSION_NUM) < DevilAPI.IL_VERSION)
@@ -69,6 +69,11 @@ namespace Tool.TSystem.ImageMaker
 
 		public override bool Load(string path)
 		{
+            if (m_path == path)
+            {
+                return true;
+            }
+            m_path = path;
 			byte[] bytes = File.ReadAllBytes(path);
 			return Load(bytes);
 		}

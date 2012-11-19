@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using SpriteTool.Data;
+using Tool.TSystem.Primitive;
 
 namespace SpriteTool.Control
 {
@@ -35,6 +36,8 @@ namespace SpriteTool.Control
 
             pivotPic.Init(m_main);
             UpdateTreeView();
+
+            InitCmbAnchor();
         }
 
 
@@ -49,6 +52,15 @@ namespace SpriteTool.Control
                 if (m_main.SelectIndex > 0)
                 {
                     m_main.SelectSprite.ImgList.RemoveAt(m_main.SelectIndex);
+                    m_main.UpdateSprite();
+                }
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                if (m_main.SelectIndex > 0)
+                {
+                    m_main.SelectIndex = -1;
+                    UpdateData();
                     m_main.UpdateSprite();
                 }
             }
@@ -196,7 +208,9 @@ namespace SpriteTool.Control
             m_main.Form.BasePicture.LoadSpriteUnit(m_main.SelectSprite);
             UpdateSprite();
 
-            pivotPic.Index = selectIndex;     
+            pivotPic.Index = selectIndex;
+            if (pivotPic.SelectImgData!=null)
+                cmbAnchor.Text = pivotPic.SelectImgData.Pivot.ToString();
         }
         
 
@@ -205,8 +219,16 @@ namespace SpriteTool.Control
             if (m_main.SelectSprite == null)
                 return;
 
-            timer1.Enabled = true;
-            pivotPic.Play = true;
+            pivotPic.Play = !pivotPic.Play;
+            timer1.Enabled = pivotPic.Play;
+            if (pivotPic.Play)
+            {
+                btnPlay.Text = "Stop";
+            }
+            else
+            {
+                btnPlay.Text = "Play";
+            }
         }
 
         private void btnStop_Click(object sender, EventArgs e)
@@ -245,7 +267,8 @@ namespace SpriteTool.Control
             }
 
             pivotPic.Index = newIndex;
-            pivotPic.Invalidate();
+            if (pivotPic.SelectImgData != null)
+                cmbAnchor.Text = pivotPic.SelectImgData.Pivot.ToString();
         }
 
 
@@ -287,8 +310,14 @@ namespace SpriteTool.Control
                 timer1.Interval = (int)(1.0f / m_main.SelectSprite.Speed * 1000);
                 txtFrame.Text = string.Format("{0}", m_main.SelectSprite.Speed);
             }
-            PivotPicture.Index = m_main.SelectIndex;
-            PivotPicture.UpdateImages();
+
+
+            pivotPic.Index = m_main.SelectIndex;
+            if (pivotPic.SelectImgData != null)
+            {
+                cmbAnchor.Text = pivotPic.SelectImgData.Pivot.ToString();
+            }
+            pivotPic.UpdateImages();
         }
 
         private void btnRename_Click(object sender, EventArgs e)
@@ -314,6 +343,38 @@ namespace SpriteTool.Control
             actorEditor.CreateActor();
 
             actorEditor.ShowDialog();            
+        }
+
+        private void cmbAnchor_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbAnchor.SelectedIndex < 0)
+                return;
+            if (m_main.SelectSprite == null)
+                return;
+
+            if (cmbAnchor.SelectedIndex == 0)
+            {
+                pivotPic.SelectImgData.Pivot = new TPoint(0, 0);
+            }
+            else if (cmbAnchor.SelectedIndex == 1)
+            {
+                pivotPic.SelectImgData.Pivot = new TPoint(pivotPic.SelectImgData.Region.Width/2, pivotPic.SelectImgData.Region.Height/2);
+            }
+            else if (cmbAnchor.SelectedIndex == 2)
+            {
+                pivotPic.SelectImgData.Pivot = new TPoint(pivotPic.SelectImgData.Region.Width, pivotPic.SelectImgData.Region.Height);
+            }
+
+            pivotPic.Invalidate();
+        }
+
+        private void InitCmbAnchor()
+        {
+            cmbAnchor.Items.Clear();
+
+            cmbAnchor.Items.Add( "0,0" );
+            cmbAnchor.Items.Add("0.5,0.5" );
+            cmbAnchor.Items.Add( "1,1" );
         }
 
     }

@@ -1,7 +1,6 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using Tool.TSystem.Primitive;
-using Point=System.Drawing.Point;
 
 namespace Tool.TSystem.ImageMaker
 {
@@ -129,7 +128,7 @@ namespace Tool.TSystem.ImageMaker
 			return destBmp;
 		}
 
-		public static void MergeImageRect(DevImage image, Bitmap srcImage, Point point)
+		public static void MergeImageRect(DevImage image, Bitmap srcImage, TPoint point)
 		{
 			BitmapData srcData = srcImage.LockBits(new Rectangle(0, 0, srcImage.Width, srcImage.Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
             

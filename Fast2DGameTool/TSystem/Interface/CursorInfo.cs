@@ -6,8 +6,8 @@ namespace Tool.TSystem.Interface
     public class CursorInfo
     {
         private UInt32 m_ownerID;
-        private Point m_prevCursorPos;
-        private Point m_cursorPos;
+        private TPoint m_prevCursorPos;
+        private TPoint m_cursorPos;
 
         public uint OwnerID
         {
@@ -15,13 +15,13 @@ namespace Tool.TSystem.Interface
             set { m_ownerID = value; }
         }
 
-        public Point PrevCursorPos
+        public TPoint PrevCursorPos
         {
             get { return m_prevCursorPos; }
             set { m_prevCursorPos = value; }
         }
 
-        public Point CursorPos
+        public TPoint CursorPos
         {
             get { return m_cursorPos; }
             set { m_cursorPos = value; }

@@ -6,18 +6,18 @@ using System.ComponentModel;
 namespace Tool.TSystem.Primitive
 {
     [TypeConverter(typeof(TPointConverter))]
-	public struct Point : IComparable<Point>
+	public struct TPoint : IComparable<TPoint>
 	{
 		private int m_x;
 		private int m_y;
 
-		public Point(int x, int y)
+		public TPoint(int x, int y)
 		{
 			m_x = x;
 			m_y = y;
 		}
 
-        public Point(System.Drawing.Point pt)
+        public TPoint(System.Drawing.Point pt)
         {
             m_x = pt.X;
             m_y = pt.Y;
@@ -28,19 +28,19 @@ namespace Tool.TSystem.Primitive
 			return rect.Has(this);
 		}
 
-		public static Point MaxValue
+		public static TPoint MaxValue
 		{
 			get
 			{
-				return new Point(int.MaxValue, int.MaxValue);				
+				return new TPoint(int.MaxValue, int.MaxValue);				
 			}
 		}
 
-		public static Point MinValue
+		public static TPoint MinValue
 		{
 			get
 			{
-				return new Point(int.MinValue, int.MinValue);
+				return new TPoint(int.MinValue, int.MinValue);
 			}
 		}
 
@@ -56,39 +56,39 @@ namespace Tool.TSystem.Primitive
             set { m_y = value; }
         }
 
-        public static Point operator -(Point lhs)
+        public static TPoint operator -(TPoint lhs)
 		{
-			return new Point(-lhs.X, -lhs.Y);
+			return new TPoint(-lhs.X, -lhs.Y);
 		}
         
-        public static Point operator /(Point lhs, int value)
+        public static TPoint operator /(TPoint lhs, int value)
         {
-            return new Point((int)(lhs.X / value), (int)(lhs.Y / value));
+            return new TPoint((int)(lhs.X / value), (int)(lhs.Y / value));
         }
 
-		public static bool operator ==(Point lhs, Point rhs)
+		public static bool operator ==(TPoint lhs, TPoint rhs)
 		{
 			return (lhs.X == rhs.X) && (lhs.Y == rhs.Y);
 		}
 
-		public static bool operator !=(Point lhs, Point rhs)
+		public static bool operator !=(TPoint lhs, TPoint rhs)
 		{
 			return (lhs.X != rhs.X) || (lhs.Y != rhs.Y);
 		}
 
-		public static Point operator +(Point lhs, Point rhs)
+		public static TPoint operator +(TPoint lhs, TPoint rhs)
 		{
-			return new Point(lhs.X + rhs.X, lhs.Y + rhs.Y);
+			return new TPoint(lhs.X + rhs.X, lhs.Y + rhs.Y);
 		}
 
-        public static Point operator *(Point lhs, float value)
+        public static TPoint operator *(TPoint lhs, float value)
         {
-            return new Point((int)( value *lhs.X ), (int)(value * lhs.Y ));
+            return new TPoint((int)( value *lhs.X ), (int)(value * lhs.Y ));
         }
 
-		public static Point operator -(Point lhs, Point rhs)
+		public static TPoint operator -(TPoint lhs, TPoint rhs)
 		{
-			return new Point(lhs.X - rhs.X, lhs.Y - rhs.Y);
+			return new TPoint(lhs.X - rhs.X, lhs.Y - rhs.Y);
 		}
 
         
@@ -98,7 +98,7 @@ namespace Tool.TSystem.Primitive
 			return string.Format("{0},{1}", X, Y);
 		}
 
-		public static float Distance(Point curPos, Point prevPos)
+		public static float Distance(TPoint curPos, TPoint prevPos)
 		{
 			return (float)Math.Sqrt(Math.Pow(curPos.X - prevPos.X, 2) + Math.Pow(curPos.Y - prevPos.Y, 2));
 		}
@@ -122,15 +122,15 @@ namespace Tool.TSystem.Primitive
 
 		#endregion
 
-		public static Point Parse(string str)
+		public static TPoint Parse(string str)
 		{
 			string[] values = str.Split(new string[] { "," }, StringSplitOptions.RemoveEmptyEntries);
 			if (values.Length != 2) throw new FileLoadException("Point 정보가 잘못됨");
-			return new Point(int.Parse(values[0]),
+			return new TPoint(int.Parse(values[0]),
 			                 int.Parse(values[1]));
 		}
 
-		public int CompareTo(Point other)
+		public int CompareTo(TPoint other)
 		{
 			if (X > other.X) return 1;
 			else if (X < other.X) return -1;
@@ -155,9 +155,9 @@ namespace Tool.TSystem.Primitive
 
         public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
         {
-            if (destinationType == typeof(string) && value is Point)
+            if (destinationType == typeof(string) && value is TPoint)
             {
-                Point p = (Point)value;
+                TPoint p = (TPoint)value;
 
                 return p.X + "," + p.Y;
             }
@@ -171,7 +171,7 @@ namespace Tool.TSystem.Primitive
                 try
                 {
                     string s = (string)value;
-                    return Point.Parse(s);
+                    return TPoint.Parse(s);
                 }
                 catch { }
                 throw new ArgumentException("Can not convert '" + (string)value + "' to type Person");

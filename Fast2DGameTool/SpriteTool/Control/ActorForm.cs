@@ -11,6 +11,8 @@ using System.IO;
 using System.Xml;
 using Tool.TSystem;
 using Tool.TSystem.IO;
+using Point = System.Drawing.Point;
+using Tool.TSystem.Primitive;
 
 namespace SpriteTool.Control
 {
@@ -18,24 +20,27 @@ namespace SpriteTool.Control
     {
         private Main m_main;
         private ActorInfo m_selectActor;
-        private bool bModify = false;
-        
+        private bool m_bModify = false;
+        private bool m_drag = false;
+        private TPoint m_prevPos;
+
         public ActorForm()
         {
-            InitializeComponent();
-            
+            InitializeComponent();            
         }
 
         internal void Init(Main main)
         {
             m_main = main;
             prevPictrue.Init(m_main);
+            anchorPropertyGrid.Init(m_main);
+
+            anchorPropertyGrid.PropertyValueChanged += new PropertyValueChangedEventHandler(anchorPropertyGrid_PropertyValueChanged);
         }
 
         public bool Modify
         {
-            get { return bModify; }
-            set { bModify = value; }
+            get { return m_bModify;  }
         }
 
         public string SelectName
@@ -54,7 +59,7 @@ namespace SpriteTool.Control
 
             int selectIndex = 0;
             int index = 0;
-            foreach ( ActorInfo info in m_main.ActorList.Actors )
+            foreach ( ActorInfo info in m_main.Actors.Actors )
             {
                 if (SelectName == info.Name)
                 {
@@ -79,6 +84,7 @@ namespace SpriteTool.Control
                 ++index;
             }
 
+            
             prevPictrue.Invalidate();
         }
 
@@ -94,17 +100,17 @@ namespace SpriteTool.Control
                 return;
 
            
-            if (m_main.ActorList.IsExist(m_main.SelectSprite.Name))
+            if (m_main.Actors.IsExist(m_main.SelectSprite.Name))
             {
                 SelectActor(m_main.SelectSprite.Name);               
                 return;
             }
             m_main.SelectSprite.IsParts = true;
-            m_main.ActorList.Add(m_main.SelectSprite);
+            m_main.Actors.Add(m_main.SelectSprite);
 
             SelectActor(m_main.SelectSprite.Name);
 
-            bModify = true;
+            m_bModify = true;
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -120,12 +126,12 @@ namespace SpriteTool.Control
             if (m_selectActor == null)
                 return;
 
-            m_main.ActorList.Delete(m_selectActor);
+            m_main.Actors.Delete(m_selectActor);
             m_selectActor = null;
 
             UpdateList();
             UpdateRegion();
-            bModify = true;
+            m_bModify = true;
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
@@ -157,7 +163,7 @@ namespace SpriteTool.Control
                     return;
             }
             ActorInfo selectActor;
-            m_main.ActorList.FindActor(name, out selectActor);
+            m_main.Actors.FindActor(name, out selectActor);
 
             if (selectActor != null)
             {
@@ -169,15 +175,7 @@ namespace SpriteTool.Control
             UpdateRegion();
         }
 
-        private void prevPictrue_MouseMove(object sender, MouseEventArgs e)
-        {
-            Point pos = new Point(e.X - prevPictrue.Center.X, e.Y - prevPictrue.Center.Y);
-
-            string msg = string.Format("xpos = {0}, ypos = {1}", pos.X, pos.Y);
-            toolStripStatusLabel1.Text = msg;
-
-            
-        }
+      
 
         private void listRegion_SelectedIndexChanged(object sender, EventArgs e)
         {            
@@ -188,7 +186,7 @@ namespace SpriteTool.Control
             if (listRegion.SelectedIndex < 0)
                 return;
 
-            ActorInfo.Anchor newAnchor = new ActorInfo.Anchor( listRegion.SelectedIndex );
+            AnchorInfo newAnchor = new AnchorInfo( listRegion.SelectedIndex );
             m_selectActor.Anchors.Add(newAnchor);
 
             prevPictrue.UpdateAnchor();
@@ -197,12 +195,12 @@ namespace SpriteTool.Control
         private void btnSave_Click(object sender, EventArgs e)
         {
             m_main.SaveActor();
-            bModify = false;
+            m_bModify = false;
         }        
 
         private void ActorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (bModify)
+            if (Modify)
             {
                 if (DialogResult.Yes == MessageBox.Show("저장하시겠습니까?", "액터정보", MessageBoxButtons.YesNo))
                 {
@@ -215,11 +213,99 @@ namespace SpriteTool.Control
         {
             prevPictrue.GuidLine = chkGuide.Checked;
             prevPictrue.Invalidate();
-        }
+        }      
 
-        private void anchorPropertyGrid_Click(object sender, EventArgs e)
+        private void anchorPropertyGrid_PropertyValueChanged(object s, PropertyValueChangedEventArgs e)
         {
-
+            prevPictrue.Invalidate();
         }
+
+        private void prevPictrue_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (prevPictrue.SelectAnchor != null)
+            {
+                if (e.Control)
+                {
+                    prevPictrue.SelectAnchor.Bmp.RotateFlip(RotateFlipType.RotateNoneFlipX);
+                    prevPictrue.SelectAnchor.XFlip = !prevPictrue.SelectAnchor.XFlip;
+                }
+                else if (e.Alt)
+                {
+                    prevPictrue.SelectAnchor.YFlip = !prevPictrue.SelectAnchor.YFlip;
+                    prevPictrue.SelectAnchor.Bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
+                }
+                else if (e.KeyCode == Keys.OemMinus)
+                {
+                    prevPictrue.SelectAnchor.ZOrder -= 1;
+                }
+                else if (e.KeyCode == Keys.Oemplus)
+                {
+                    prevPictrue.SelectAnchor.ZOrder += 1;
+                }
+                else if (e.KeyCode == Keys.Delete)
+                {
+                    m_selectActor.Anchors.Remove(prevPictrue.SelectAnchor);
+                    prevPictrue.SelectAnchor = null;
+                    //anchorPropertyGrid.SelectedObject = null;
+
+                    m_bModify = true;
+                    prevPictrue.UpdateAnchor();
+                }
+            }
+            anchorPropertyGrid.SelectedObject = prevPictrue.SelectAnchor;
+            prevPictrue.Invalidate();
+        }        
+
+        private void prevPictrue_MouseDown(object sender, MouseEventArgs e)
+        {
+            TPoint mousePos = new TPoint(e.X, e.Y);
+            foreach (AnchorInfo anchor in m_selectActor.Anchors)
+            {
+                Bitmap curImage = anchor.Bmp;
+
+                TPoint startPos = prevPictrue.GetSpritePos(m_selectActor.SpriteInfo, anchor) + anchor.Position;
+                Rect selectRect = new Rect(startPos.X, startPos.Y, startPos.X + curImage.Width, startPos.Y + curImage.Height);
+
+                if (selectRect.Has(mousePos))
+                {
+                    prevPictrue.SelectAnchor = anchor;
+                    anchorPropertyGrid.SelectedObject = anchor;
+                    m_drag = true;
+                }
+            }
+            m_prevPos = mousePos;
+            prevPictrue.Focus();
+        }
+
+        private void prevPictrue_MouseMove(object sender, MouseEventArgs e)
+        {
+            TPoint mousePos = new TPoint(e.X, e.Y);
+
+            if (m_prevPos == mousePos)
+                return;
+
+            TPoint pos = new TPoint(e.X - prevPictrue.Center.X, e.Y - prevPictrue.Center.Y);
+
+            string msg = string.Format("xpos = {0}, ypos = {1}", pos.X, pos.Y);
+            toolStripStatusLabel1.Text = msg;           
+
+            if (prevPictrue.SelectAnchor != null && m_drag)
+            {
+                TPoint startPos = prevPictrue.GetSpritePos(m_selectActor.SpriteInfo, prevPictrue.SelectAnchor);
+                TPoint newOffset = pos;
+
+                prevPictrue.SelectAnchor.Position = pos;
+                m_bModify = true;
+            }
+            anchorPropertyGrid.SelectedObject = prevPictrue.SelectAnchor;
+            prevPictrue.Invalidate();
+            m_prevPos = mousePos;
+        }
+
+        private void prevPictrue_MouseUp(object sender, MouseEventArgs e)
+        {
+            m_drag = false;
+        }
+
     }
 }

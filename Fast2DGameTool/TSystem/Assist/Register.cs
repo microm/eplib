@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Win32;
 using Tool.TSystem;
-using Point = Tool.TSystem.Primitive.Point;
+using Point = Tool.TSystem.Primitive.TPoint;
 
 namespace Tool.TSystem.Assist
 {

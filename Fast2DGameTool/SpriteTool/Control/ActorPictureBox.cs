@@ -6,13 +6,13 @@ using Tool.TSystem.ImageMaker;
 using System.Drawing.Imaging;
 using SpriteTool.Data;
 using System.Collections.Generic;
-using TPoint = Tool.TSystem.Primitive.Point;
 using Point = System.Drawing.Point;
 using Tool.TSystem.Primitive;
 using Tool.TSystem;
 
 namespace SpriteTool.Control
-{
+{    
+
     public class EditPictureBox : PictureBox
     {
         public const int _controlID = 6;
@@ -23,17 +23,10 @@ namespace SpriteTool.Control
         private bool m_bPlay = false;
         private ActorInfo m_actorInfo;
 
-        private Point m_center;
-        
-        private TPoint m_prePos;
-        private ActorInfo.Anchor m_selectAnchor;
-
-        private DevImage m_dImage;
-        private List<Bitmap> m_srcImageList = new List<Bitmap>();
-
-        private Pen m_regionPen = new Pen(Brushes.Black);
-        private bool m_drag = false;
-        private bool m_bModify = false;
+        private Point m_center;        
+        private AnchorInfo m_selectAnchor;
+   
+        private Pen m_regionPen = new Pen(Brushes.Black);        
         
         private bool m_bGuidLine = true;
         private int m_guidTabSize = 20;
@@ -46,9 +39,10 @@ namespace SpriteTool.Control
             }
         }
 
-        public bool Modify
+        public SpriteTool.Data.AnchorInfo SelectAnchor
         {
-            get { return m_bModify; }
+            get { return m_selectAnchor; }
+            set { m_selectAnchor = value; }
         }
 
         public EditPictureBox()
@@ -63,10 +57,6 @@ namespace SpriteTool.Control
         internal void Init( Main main )
         {
             m_main = main;
-            if (m_dImage == null)
-            {
-                m_dImage = new DevImage(100, 100);
-            }
             m_center = new Point(Width / 2, Height / 2);
         }
 
@@ -90,9 +80,7 @@ namespace SpriteTool.Control
         public void SetActor( ActorInfo info )
         {
             m_actorInfo = info;
-
-            m_srcImageList.Clear();
-
+            
             if (info.SpriteInfo == null)
             {
                 SpriteInfo spriteInfo;
@@ -100,172 +88,60 @@ namespace SpriteTool.Control
                 info.SpriteInfo = spriteInfo;
             }
 
-            string path = "actor/" + info.SpriteInfo.Path;
-            path = m_main.Browser.GetFileFullPath(IODataType.Image, path);
-
-            if (m_dImage.Load(path))
-            {
-                foreach (ImgData img in info.SpriteInfo.ImgList)
-                {
-                    m_srcImageList.Add(m_dImage.Crop(img.Region.Left, img.Region.Top, img.Region.Width, img.Region.Height));
-                }                
-            }
             UpdateAnchor();
         }
 
         public void UpdateAnchor()
         {            
-            foreach (ActorInfo.Anchor anchor in m_actorInfo.Anchors)
+            foreach (AnchorInfo anchor in m_actorInfo.Anchors)
             {
-                Bitmap curImage = m_srcImageList[anchor.Index].Clone() as Bitmap;
-
-                if (anchor.bXFlip)
-                {
-                    curImage.RotateFlip(RotateFlipType.RotateNoneFlipX);
-                }
-                if (anchor.bYFlip)
-                {
-                    curImage.RotateFlip(RotateFlipType.RotateNoneFlipY);
-                }
-
-                anchor.Bmp = curImage;
+                anchor.LoadBmp(m_main, m_actorInfo.SpriteInfo);
             }
             Invalidate();
         }
 
-        public TPoint GetSpritePos( SpriteInfo info, ActorInfo.Anchor anchor)
+        public TPoint GetSpritePos( SpriteInfo info, AnchorInfo anchor)
         {
-            int index = anchor.Index;
+            if (anchor.Bmp == null)
+                return new TPoint(0, 0);
 
-            ImgData imgData =  m_actorInfo.SpriteInfo.ImgList[index];
+            int index = anchor.Index;
+            ImgData imgData = info.ImgList[index];
             TPoint offset = imgData.Pivot;
 
-            if (anchor.bXFlip)
+            if (anchor.XFlip)
             {
-                offset.X = imgData.Region.Width - imgData.Pivot.X;
+                offset.X = anchor.Bmp.Width - imgData.Pivot.X;
             }
-            if (anchor.bYFlip)
+            if (anchor.YFlip)
             {
-                offset.Y = imgData.Region.Height - imgData.Pivot.Y;
+                offset.Y = anchor.Bmp.Height - imgData.Pivot.Y;
             }
-
             return new TPoint(m_center.X - offset.X, m_center.Y - offset.Y);
-        }
-        
-        protected override void OnMouseDown(MouseEventArgs e)
-        {
-            base.OnMouseDown(e);
-
-            m_prePos = new TPoint(e.X, e.Y);
-
-            foreach (ActorInfo.Anchor anchor in m_actorInfo.Anchors)
-            {
-                Bitmap curImage = m_srcImageList[anchor.Index];
-
-                TPoint startPos = GetSpritePos(m_actorInfo.SpriteInfo, anchor) + anchor.Offset;
-                Rect selectRect = new Rect(startPos.X, startPos.Y,startPos.X+ curImage.Width,startPos.Y+ curImage.Height);
-
-                if ( selectRect.Has( m_prePos ) )
-                {
-                    m_selectAnchor = anchor;
-                    m_drag = true;
-                }
-            }
-            Focus();
-            Invalidate();
-        }
-
-        protected override void OnKeyDown(KeyEventArgs e)
-        {
-            base.OnKeyDown(e);
-
-            if (m_selectAnchor != null)
-            {
-                if (e.Control)
-                {
-                    m_selectAnchor.Bmp.RotateFlip(RotateFlipType.RotateNoneFlipX);
-                    m_selectAnchor.bXFlip = !m_selectAnchor.bXFlip;
-                }
-                else if (e.Alt)
-                {
-                    m_selectAnchor.bYFlip = !m_selectAnchor.bYFlip;
-                    m_selectAnchor.Bmp.RotateFlip(RotateFlipType.RotateNoneFlipY);
-                }
-                else if (e.KeyCode== Keys.OemMinus)
-                {
-                    m_selectAnchor.ZOrder -= 1;
-                }
-                else if (e.KeyCode == Keys.Oemplus)
-                {
-                    m_selectAnchor.ZOrder += 1;
-                }
-                else if (e.KeyCode == Keys.Delete)
-                {
-                    m_actorInfo.Anchors.Remove(m_selectAnchor);
-                    m_selectAnchor = null;
-
-                    m_bModify = true;
-                    UpdateAnchor();
-                }
-            }
-            Invalidate();
-        }
-
-        protected override void OnMouseMove(MouseEventArgs e)
-        {
-            base.OnMouseMove(e);
-            
-            TPoint mousePos = new TPoint(e.X, e.Y);
-
-            if (m_selectAnchor != null && m_drag)
-            {
-                TPoint startPos = GetSpritePos(m_actorInfo.SpriteInfo, m_selectAnchor );
-                TPoint newOffset = new TPoint(mousePos.X - m_center.X, mousePos.Y - m_center.Y);
-
-                m_selectAnchor.Offset = newOffset;
-
-                m_bModify = true;
-            }
-            Invalidate();
-        }
-
-        protected override void OnMouseUp(MouseEventArgs e)
-        {
-            base.OnMouseUp(e);
-
-            m_drag = false;
-            //m_selectAnchor = 0;
-            //Invalidate();
-        }
-        
-        
+        }      
+                        
         protected override void OnPaint(PaintEventArgs pe)
         {
+            Graphics grfx = pe.Graphics;
+            DrawGrid(grfx);
             if (m_actorInfo == null)
             {
                 base.OnPaint(pe);
                 return;
-            }
-
-            Graphics grfx = pe.Graphics;
+            }            
             ImageAttributes attr = new ImageAttributes();
-
-            DrawGrid(grfx);
-
             if (m_actorInfo.SpriteInfo.HasColorKey)
             {
                 attr.SetColorKey(m_actorInfo.SpriteInfo.ColorKey, m_actorInfo.SpriteInfo.ColorKey);
             }
-
             Pen selectPen = new Pen(Brushes.Red);
 
-           
-            List<ActorInfo.Anchor> SortInfo = new List<ActorInfo.Anchor>(m_actorInfo.Anchors);
+            List<AnchorInfo> SortInfo = new List<AnchorInfo>(m_actorInfo.Anchors);
             SortInfo.Sort(CompareAnchor);
-            foreach (ActorInfo.Anchor anchor in SortInfo)
+            foreach (AnchorInfo anchor in SortInfo)
             {
                 Bitmap curImage = anchor.Bmp;
-                TPoint startPos = GetSpritePos(m_actorInfo.SpriteInfo, anchor) + anchor.Offset;
+                TPoint startPos = GetSpritePos(m_actorInfo.SpriteInfo, anchor) + anchor.Position;
                 
                 Rectangle drawRect = new Rectangle(startPos.X, startPos.Y, curImage.Width, curImage.Height);
                 grfx.DrawImage(curImage, drawRect,
@@ -285,7 +161,7 @@ namespace SpriteTool.Control
             }
         }
 
-        private static int CompareAnchor(ActorInfo.Anchor lh, ActorInfo.Anchor rh)
+        private static int CompareAnchor(AnchorInfo lh, AnchorInfo rh)
         {
             if (lh.ZOrder > rh.ZOrder) return 1;
             if (lh.ZOrder < rh.ZOrder) return -1;

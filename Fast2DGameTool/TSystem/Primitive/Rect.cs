@@ -40,7 +40,7 @@ namespace Tool.TSystem.Primitive
             this.bottom = bottom;
         }
 
-        public Rect(Point position, int width, int height)
+        public Rect(TPoint position, int width, int height)
         {
             left = position.X;
             top = position.Y;
@@ -48,7 +48,7 @@ namespace Tool.TSystem.Primitive
             this.bottom = top + height;
         }
 
-        public Rect(Point pointA, Point pointB)
+        public Rect(TPoint pointA, TPoint pointB)
         {
             left = Math.Min(pointA.X, pointB.X);
             top = Math.Min(pointA.Y, pointB.Y);
@@ -78,7 +78,7 @@ namespace Tool.TSystem.Primitive
             return new Rect(lhs.Position, lhs.Width * rhs, lhs.Height * rhs);
         }
 
-        public bool Has(Point point)
+        public bool Has(TPoint point)
         {
             return (left <= point.X && top <= point.Y) && (left + Width > point.X && top + Height > point.Y);
         }
@@ -93,21 +93,21 @@ namespace Tool.TSystem.Primitive
         }
 
         [Browsable(false)]
-        public Point Position
+        public TPoint Position
         {
-            get { return new Point(left, top); }
+            get { return new TPoint(left, top); }
         }
 
         [Browsable(false)]
-        public Point Size
+        public TPoint Size
         {
-            get { return new Point(Width, Height); }
+            get { return new TPoint(Width, Height); }
         }
 
         [Browsable(false)]
-        public Point RightBottom
+        public TPoint RightBottom
         {
-            get { return new Point(right, bottom); }
+            get { return new TPoint(right, bottom); }
         }
 
         public int Left
@@ -161,8 +161,8 @@ namespace Tool.TSystem.Primitive
 
         public static Rect Join(Rect lhs, Rect rhs)
         {
-            Point start = new Point(Math.Min(lhs.left, rhs.left), Math.Min(lhs.top, rhs.top));
-            Point end = new Point(Math.Max(lhs.Right, rhs.Right), Math.Max(lhs.Bottom, rhs.Bottom));
+            TPoint start = new TPoint(Math.Min(lhs.left, rhs.left), Math.Min(lhs.top, rhs.top));
+            TPoint end = new TPoint(Math.Max(lhs.Right, rhs.Right), Math.Max(lhs.Bottom, rhs.Bottom));
             return new Rect(start, end);
         }
 
@@ -199,7 +199,7 @@ namespace Tool.TSystem.Primitive
             int iWidth = int.Parse(values[2]);
             int iHeight = int.Parse(values[3]);
 
-            return new Rect( new Point(iLeft, iTop), iWidth, iHeight);
+            return new Rect( new TPoint(iLeft, iTop), iWidth, iHeight);
         }
 
         /// <summary>
@@ -213,7 +213,7 @@ namespace Tool.TSystem.Primitive
             Height += size * 2;
         }
 
-        public void Offset(Point offset)
+        public void Offset(TPoint offset)
         {
             left += offset.X;
             top += offset.Y;
@@ -224,7 +224,7 @@ namespace Tool.TSystem.Primitive
         /// </summary>
   
 
-        public void Resize(Point size)
+        public void Resize(TPoint size)
         {
             Width += size.X;
             Height += size.Y;
@@ -240,7 +240,7 @@ namespace Tool.TSystem.Primitive
             int bottom = Math.Min(lhs.Bottom, rhs.Bottom);
             if (top >= bottom) return new Rect(0, 0, 0, 0);
 
-            return new Rect(new Point(left, top), new Point(right, bottom));
+            return new Rect(new TPoint(left, top), new TPoint(right, bottom));
         }
     }
 
@@ -257,7 +257,7 @@ namespace Tool.TSystem.Primitive
 
         public override object ConvertTo(ITypeDescriptorContext context, System.Globalization.CultureInfo culture, object value, Type destinationType)
         {
-            if (destinationType == typeof(string) && value is Point)
+            if (destinationType == typeof(string) && value is TPoint)
             {
                 Rect rt = (Rect)value;
                 return rt.Left + "," + rt.Top + rt.Right + "," + rt.Bottom;

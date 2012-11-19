@@ -11,8 +11,10 @@
     <RootNamespace>SpriteTool</RootNamespace>
     <AssemblyName>SpriteTool</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -25,7 +27,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -76,11 +77,20 @@
     <Compile Include="Control\ActorPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Control\StagePictureBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Control\PiecePictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Control\ListPicPanel.cs">
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Control\PropertyGridEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Control\PropertyGridEx.Designer.cs">
+      <DependentUpon>PropertyGridEx.cs</DependentUpon>
     </Compile>
     <Compile Include="Control\SelectRegionForm.cs">
       <SubType>Form</SubType>
@@ -96,6 +106,15 @@
     </Compile>
     <Compile Include="Data\ActorInfo.cs" />
     <Compile Include="Data\ActorList.cs" />
+    <Compile Include="Data\AnchorInfo.cs" />
+    <Compile Include="Data\ControlBase.cs" />
+    <Compile Include="Data\Control\ButtonControl.cs" />
+    <Compile Include="Data\Control\ControlContainer.cs" />
+    <Compile Include="Data\Control\LayeredCollection.cs" />
+    <Compile Include="Data\Control\PanelControl.cs" />
+    <Compile Include="Data\Control\FormControl.cs" />
+    <Compile Include="Data\Control\LabelControl.cs" />
+    <Compile Include="Data\StageLayer.cs" />
     <Compile Include="Data\SpriteMap.cs" />
     <Compile Include="Data\SpriteInfo.cs" />
     <Compile Include="Main.cs" />
@@ -150,11 +169,13 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <EmbeddedResource Include="Resource3.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource3.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
