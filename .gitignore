@@ -4,6 +4,10 @@
 *.user
 *.suo
 *.pdb
+*.zip
+
 obj/
 bin/
 data/
+Debug/
+Release/
