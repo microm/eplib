@@ -8,6 +8,6 @@
 
 obj/
 bin/
-data/
 Debug/
 Release/
+Assets/
