@@ -136,6 +136,7 @@ namespace SpriteTool.Data.Control
 
         public override void Write(XmlWriter writer)
         {
+            base.Write(writer);
             foreach (ControlBase child in m_layeredCollection)
             {
                 child.Write(writer);
@@ -149,7 +150,7 @@ namespace SpriteTool.Data.Control
             XmlNodeList controlNodes = node.SelectNodes("control");
             foreach (XmlNode child in controlNodes)
             {
-                ControlBase.Read(main, child);
+                Add( ControlBase.Read(main, child) );
             }
         }
 

@@ -75,7 +75,7 @@ namespace SpriteTool.State
                 {
                     controlRect.Bottom = controlRect.Bottom + offset.Y;
                 }
-                //control.Rect = controlRect;
+                control.Rect = controlRect;
             }
         }
     }

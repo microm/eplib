@@ -45,7 +45,7 @@ namespace Tool.TSystem
     }
 
     [Flags]
-    public enum AnchorType
+    public enum AnchorType : int
     {
         LEFT = 1,
         RIGHT = 2,
@@ -59,7 +59,7 @@ namespace Tool.TSystem
     };
 
     [Flags]
-    public enum FlagPosition
+    public enum FlagPosition : int
     {
         None = 0,
         Top = 1,

@@ -46,6 +46,8 @@ namespace SpriteTool.Command
                 m_parentsControl.Remove(m_selectControls[i]);
             }
             m_selectControls.Clear();
+
+            
             return true;
         }
 

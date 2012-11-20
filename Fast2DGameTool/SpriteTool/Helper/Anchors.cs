@@ -12,20 +12,20 @@ namespace SpriteTool.Helper
 {
     public class Anchors
     {
-        public readonly static int NumberOfMoveAnchor = 8;
-
         private readonly List<AnchorInfo> m_infos = new List<AnchorInfo>();
+        private readonly AnchorInfo m_moveAnchor;
+
         private readonly ControlBase m_control;
         private Rect m_rect;
 
-        public struct AnchorInfo
+        public class AnchorInfo
         {
             public Rect rect;
             public FlagPosition flag;
 
             public AnchorInfo(int x, int y, FlagPosition flag)
             {
-                rect = new Rect(x, y, Define.AnchorSize, Define.AnchorSize);
+                rect = new Rect(new TPoint(x, y), Define.AnchorSize, Define.AnchorSize);
                 this.flag = flag;
             }
 
@@ -33,6 +33,11 @@ namespace SpriteTool.Helper
             {
                 this.rect = rect;
                 this.flag = flag;
+            }
+
+            public Rectangle DrawRect
+            {
+                get { return new Rectangle(rect.Left, rect.Top, rect.Width, rect.Height); }
             }
         }
 
@@ -49,12 +54,14 @@ namespace SpriteTool.Helper
             TPoint size = control.Rect.Size + new TPoint(Define.AnchorSize, Define.AnchorSize);
 
             Rect = new Rect(point, size.X, size.Y);
-
-            Generate(control.Rect.Position, control.Rect.RightBottom);
-
+            
+            if (m_control.Sizable)
+            {
+                Generate(control.Rect.Position, control.Rect.RightBottom);
+            }
             if (m_control is ControlContainer)
             {
-                m_infos.Add(new AnchorInfo(new Rect(point + new TPoint(15, -Define.AnchorOffset / 2), 10, 10), FlagPosition.None));
+                m_moveAnchor = new AnchorInfo(new Rect(point + new TPoint(15, -Define.AnchorOffset / 2), 10, 10), FlagPosition.None);
             }
         }
 
@@ -89,6 +96,12 @@ namespace SpriteTool.Helper
             get { return m_infos; }
         }
 
+
+        public AnchorInfo MoveAnchor
+        {
+            get { return m_moveAnchor; }
+        }
+
         public ControlBase Control
         {
             get { return m_control; }
@@ -112,21 +125,13 @@ namespace SpriteTool.Helper
             SolidBrush brush = new SolidBrush(Define.LineColor);
             for (int i = 0; i < m_infos.Count; i++)
             {
-                Rectangle drawRect = new Rectangle(
-                    m_infos[i].rect.Left,
-                    m_infos[i].rect.Top,
-                    m_infos[i].rect.Width,
-                    m_infos[i].rect.Height);
+                g.FillRectangle(brush, m_infos[i].DrawRect);
+            }
 
-                if (i == NumberOfMoveAnchor)
-                {
-                    g.FillRectangle(brush, drawRect);
-                }
-                else
-                {
-                    brush.Color = Define.ControllerColor;
-                    g.FillRectangle(brush, drawRect);
-                }
+            if ( m_moveAnchor != null )
+            {
+                brush.Color = Define.ControllerColor;
+                g.FillRectangle(brush, m_moveAnchor.DrawRect );
             }
         }
 

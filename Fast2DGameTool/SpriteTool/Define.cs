@@ -16,7 +16,7 @@ namespace SpriteTool
         public readonly static Color ControllerColor = Color.Purple;
         public readonly static int Width = 200;
         public readonly static int Height = 200;
-        public readonly static Color LineColor = Color.Yellow;
+        public readonly static Color LineColor = Color.Black;
         public readonly static Color DragLineColor = Color.Gray;
     }
 }

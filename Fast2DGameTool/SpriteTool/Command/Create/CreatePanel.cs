@@ -26,13 +26,13 @@ namespace SpriteTool.Command.Create
 
         public override ICommand Clone()
         {
-            return new CreatePanel(m_editor, m_startPosition, m_endPosition, m_createControl);
+            return new CreatePanel(m_editPanel, m_startPosition, m_endPosition, m_createControl);
         }
 
         protected override ControlBase CreateControl()
         {
-            if (m_editor.LayerInfo == null) return null;
-            return m_editor.LayerInfo.CreateControl(ControlType.Panel, m_startPosition, m_endPosition);
+            if (m_editPanel.LayerInfo == null) return null;
+            return m_editPanel.LayerInfo.CreateControl(ControlType.Panel, m_startPosition, m_endPosition);
         }
     }
 }

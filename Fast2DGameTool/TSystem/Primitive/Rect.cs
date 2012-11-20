@@ -34,8 +34,8 @@ namespace Tool.TSystem.Primitive
 
         public Rect(int left, int top, int right, int bottom)
         {
-            this.left = left;
-            this.top = top;
+            this.left = Math.Max(left,0);
+            this.top = Math.Max(top,0);
             this.right = right;
             this.bottom = bottom;
         }

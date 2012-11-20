@@ -32,6 +32,13 @@ namespace SpriteTool.Data
         private ScaleType m_scaleType = ScaleType.None;
         private float m_scale = 1.0f;
         private Main m_main;
+        private bool m_bModify = false;
+
+        public bool Modify
+        {
+            get { return m_bModify; }
+            set { m_bModify = value; }
+        }
 
         public FormControl Form
         {
@@ -65,16 +72,18 @@ namespace SpriteTool.Data
             XmlDocument doc = new XmlDocument();
             doc.Load(stream);
             XmlNode rootNode = doc.SelectSingleNode("Stage");
-            string name = GenericXmlReader.ReadStringAttribute(rootNode, "name");
+            m_name = GenericXmlReader.ReadStringAttribute(rootNode, "name");
 
-            XmlNode formNode = rootNode.SelectSingleNode("Form");
-            ControlBase form = ControlBase.Read(main, formNode);
-
-            if (form.Type == ControlType.Form)
+            XmlNode formNode = rootNode.SelectSingleNode("control");
+            if (formNode != null)
             {
-                m_form = (FormControl)form;
-                return true;
-            }            
+                ControlBase form = ControlBase.Read(main, formNode);
+                if ( form != null && form.Type == ControlType.Form)
+                {
+                    AddForm( form );
+                    return true;
+                } 
+            }
             return false;
         }
 
@@ -135,6 +144,9 @@ namespace SpriteTool.Data
         {
             m_form = (FormControl)control;
             m_form.Root = this;
+            m_size = m_form.Rect.Size;
+
+            m_bModify = true;
         }
 
         internal void RemoveControl(ControlBase control)
@@ -143,6 +155,8 @@ namespace SpriteTool.Data
                 return;
 
             m_form.Remove(control);
+
+            m_bModify = true;
         }
 
         internal ControlBase CreateControl(ControlType controlType, TPoint startPosition, TPoint endPosition)
@@ -156,7 +170,10 @@ namespace SpriteTool.Data
                 control.Anchor.LoadBmp(m_main, control.Sprite);                
             }
             control.Size = endPosition - startPosition;
-            control.Root = this;            
+            control.Root = this;
+
+            m_bModify = true;
+
             return control;
         }
 

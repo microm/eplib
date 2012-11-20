@@ -21,15 +21,22 @@ namespace SpriteTool.State
     {
         private AbstractState m_currentState;
         private readonly CommandManager m_commandManager;
-        private readonly StageBox m_editor;
+        private readonly StageBox m_editPanel;       
+
         private FlagPosition m_flagPosition;
 
         public StateManager(CommandManager commandManager, StageBox editor)
         {
             m_commandManager = commandManager;
-            m_editor = editor;
-            ChangeState(StateType.Idle);
+            m_editPanel = editor;
+
+            m_currentState = new IdleState(m_editPanel, this, m_commandManager);
         }
+
+        public StageBox EditPanel
+        {
+            get { return m_editPanel; }
+        } 
 
         public AbstractState CurrentState
         {
@@ -44,25 +51,28 @@ namespace SpriteTool.State
 
         public void ChangeState(StateType type)
         {
+            if (EditPanel.LayerInfo == null)
+                return;
+
             switch (type)
             {
                 case StateType.CreateButton:
-                    m_currentState = new CreateControlState(new CreateButton(m_editor), this, m_commandManager);
+                    m_currentState = new CreateControlState(new CreateButton(m_editPanel), this, m_commandManager);
                     break;
                 case StateType.CreateLabel:
-                    m_currentState = new CreateControlState(new CreateLabel(m_editor), this, m_commandManager);
+                    m_currentState = new CreateControlState(new CreateLabel(m_editPanel), this, m_commandManager);
                     break;
                 case StateType.CreatePanel:
-                    m_currentState = new CreateControlState(new CreatePanel(m_editor), this, m_commandManager);
+                    m_currentState = new CreateControlState(new CreatePanel(m_editPanel), this, m_commandManager);
                     break;
                 case StateType.Move:
-                    m_currentState = new MoveState(m_editor.SelectedControls, this, m_commandManager);
+                    m_currentState = new MoveState(m_editPanel.SelectedControls, this, m_commandManager);
                     break;
                 case StateType.Resize:
-                    m_currentState = new ResizeControlState(m_editor.SelectedControls, this, m_commandManager, m_flagPosition);
+                    m_currentState = new ResizeControlState(m_editPanel.SelectedControls, this, m_commandManager, m_flagPosition);
                     break;
                 case StateType.Idle:
-                    m_currentState = new IdleState(m_editor, this, m_commandManager);
+                    m_currentState = new IdleState(m_editPanel, this, m_commandManager);
                     break;
             }
         }

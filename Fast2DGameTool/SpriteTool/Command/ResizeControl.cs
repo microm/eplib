@@ -46,7 +46,6 @@ namespace SpriteTool.Command
 
         public ICommand Clone()
         {
-
             return new ResizeControl(m_controls, m_flagPosition, m_offset);
         }
     }

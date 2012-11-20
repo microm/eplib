@@ -20,7 +20,7 @@ namespace SpriteTool.Control
     {
         private Main m_main;
         private ActorInfo m_selectActor;
-        private bool m_bModify = false;
+       
         private bool m_drag = false;
         private TPoint m_prevPos;
 
@@ -36,11 +36,6 @@ namespace SpriteTool.Control
             anchorPropertyGrid.Init(m_main);
 
             anchorPropertyGrid.PropertyValueChanged += new PropertyValueChangedEventHandler(anchorPropertyGrid_PropertyValueChanged);
-        }
-
-        public bool Modify
-        {
-            get { return m_bModify;  }
         }
 
         public string SelectName
@@ -109,8 +104,6 @@ namespace SpriteTool.Control
             m_main.Actors.Add(m_main.SelectSprite);
 
             SelectActor(m_main.SelectSprite.Name);
-
-            m_bModify = true;
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -131,7 +124,6 @@ namespace SpriteTool.Control
 
             UpdateList();
             UpdateRegion();
-            m_bModify = true;
         }
 
         private void btnPlay_Click(object sender, EventArgs e)
@@ -188,6 +180,7 @@ namespace SpriteTool.Control
 
             AnchorInfo newAnchor = new AnchorInfo( listRegion.SelectedIndex );
             m_selectActor.Anchors.Add(newAnchor);
+            m_main.Actors.Modify = true;
 
             prevPictrue.UpdateAnchor();
         }
@@ -195,12 +188,11 @@ namespace SpriteTool.Control
         private void btnSave_Click(object sender, EventArgs e)
         {
             m_main.SaveActor();
-            m_bModify = false;
         }        
 
         private void ActorForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (Modify)
+            if (m_main.Actors.Modify)
             {
                 if (DialogResult.Yes == MessageBox.Show("저장하시겠습니까?", "액터정보", MessageBoxButtons.YesNo))
                 {
@@ -248,7 +240,7 @@ namespace SpriteTool.Control
                     prevPictrue.SelectAnchor = null;
                     //anchorPropertyGrid.SelectedObject = null;
 
-                    m_bModify = true;
+                    m_main.Actors.Modify = true;
                     prevPictrue.UpdateAnchor();
                 }
             }
@@ -295,7 +287,7 @@ namespace SpriteTool.Control
                 TPoint newOffset = pos;
 
                 prevPictrue.SelectAnchor.Position = pos;
-                m_bModify = true;
+                m_main.Actors.Modify = true;
             }
             anchorPropertyGrid.SelectedObject = prevPictrue.SelectAnchor;
             prevPictrue.Invalidate();

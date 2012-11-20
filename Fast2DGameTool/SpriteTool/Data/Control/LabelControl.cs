@@ -19,6 +19,11 @@ namespace SpriteTool.Data.Control
             set { m_text = value; }
         }
 
+        public override bool Sizable
+        {
+            get { return true; }
+        }
+
         public LabelControl()
         {
             m_name = string.Format("Label_{0}", CountId++);

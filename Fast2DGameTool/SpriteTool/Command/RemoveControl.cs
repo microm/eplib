@@ -14,8 +14,8 @@ namespace SpriteTool.Command
         private readonly Controls m_selectedControls = new Controls();
         private readonly Controls m_controls = new Controls();
         private readonly ControlContainer m_parentsControl;
-        
-        public RemoveControl( Controls selectedControls, ControlContainer container )
+
+        public RemoveControl( Controls selectedControls, ControlContainer container)
         {
             m_selectedControls = selectedControls;
             m_controls.Set(selectedControls.Get());

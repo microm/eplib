@@ -36,7 +36,7 @@ namespace SpriteTool.Data
         private TPoint m_size = new TPoint(50,50);
               
         public abstract ControlType Type { get; }
-
+        
         public virtual StageLayer Root
         {
             get { return m_root; }
@@ -70,6 +70,11 @@ namespace SpriteTool.Data
         {
             get { return m_anchor; }
             set { m_anchor = value; }
+        }
+
+        public virtual bool Sizable
+        {
+            get { return false; }
         }
 
         public virtual TPoint AbsolutePosition
@@ -156,8 +161,8 @@ namespace SpriteTool.Data
             //Matrix transform = new Matrix();
             //transform.RotateAt(control.Rotate, new PointF(m_center.X, m_center.Y));
             //grfx.Transform = transform;
-
-            grfx.DrawImage(m_anchor.Bmp, DrawRect,
+            
+            grfx.DrawImage( m_anchor.Bmp, DrawRect,
                 0, 0, m_anchor.Bmp.Width, m_anchor.Bmp.Height, GraphicsUnit.Pixel);
         }
 
@@ -167,8 +172,8 @@ namespace SpriteTool.Data
 
             if (m_sprite != null)
             {
-                GenericXmlWriter.WriteAttribute(writer, "cate", m_sprite.Cate);
-                GenericXmlWriter.WriteAttribute(writer, "name", m_sprite.Name);
+                GenericXmlWriter.WriteAttribute(writer, "cate", (int)m_sprite.Cate);
+                GenericXmlWriter.WriteAttribute(writer, "sprite", m_sprite.Name);
             }
             GenericXmlWriter.WriteAttribute(writer, "type", Type.ToString() );
             Anchor.Write(writer);
@@ -187,19 +192,18 @@ namespace SpriteTool.Data
             ControlBase newControl = CreateControl(type);
 
             XmlNode anchorNode = node.SelectSingleNode("anchor");
-            AnchorInfo anchor = AnchorInfo.Read(anchorNode);
+            newControl.Anchor = AnchorInfo.Read(anchorNode);
 
             SpriteInfo info = null;
             if (GenericXmlReader.IsExistAttribute(node, "cate"))
             {
                 int cate = GenericXmlReader.ReadIntAttribute(node, "cate");
-                string spriteName = GenericXmlReader.ReadStringAttribute(node, "name");
-
-                if (main.SpritesMap.FindSpriteUnit(spriteName, out info, cate))
+                string spriteName = GenericXmlReader.ReadStringAttribute(node, "sprite");
+                if ( main.SpritesMap.FindSpriteUnit(spriteName, out info, cate) )
                 {
-                    return null;
-                }
-                newControl.Init(info, anchor.Index);
+                    newControl.Init(info, newControl.Anchor.Index);
+                    newControl.Anchor.LoadBmp(main, info);
+                }                
             }
             newControl.ReadProperties(main,node);
 

@@ -11,13 +11,13 @@ namespace SpriteTool.Data
 { 
 
     public class ActorInfo
-    {        
-
+    {     
         private string m_name;
         private List<AnchorInfo> m_anchors;
 
         private SpriteInfo m_spriteInfo;
         
+
         public string Name
         {
             get { return m_name; }

@@ -19,15 +19,17 @@ namespace SpriteTool.Control
 {
     public partial class StageForm : Form
     {
-        private Main m_main;
-        
+        private Main m_main;        
         public List<string> m_resNames = new List<string>();
         public List<TPoint> m_resolutions = new List<TPoint>();
            
-        private bool m_bModify = false;
-
         private readonly CommandManager m_commandManager = new CommandManager();
         private readonly StateManager m_stateManager;
+
+        public StateManager StateManager
+        {
+            get { return m_stateManager; }
+        } 
 
         private readonly MouseEventTranslator m_mouseTranslator = new MouseEventTranslator();
         private readonly KeyboardEvent m_keyEvent = new KeyboardEvent();
@@ -59,15 +61,11 @@ namespace SpriteTool.Control
             m_main = main;
             stagePanel.Init( m_main,this );
 
+            txtStage.Text = "NoName";
+
             InitStageList();
         }
-
-        public bool Modify
-        {
-            get { return m_bModify; }
-            set { m_bModify = value; }
-        }
-
+        
         private void btnClose_Click(object sender, EventArgs e)
         {
             Close();
@@ -106,21 +104,20 @@ namespace SpriteTool.Control
       
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (stagePanel.LayerInfo == null)
+            if (stagePanel.LayerInfo == null )
                 return;
 
-            if (m_bModify)
+            if (stagePanel.LayerInfo.Modify)
             {
                 stagePanel.LayerInfo.Save(m_main);
-
                 InitStageList();
-                m_bModify = false;
             }
         }
 
         private void btnStageCreate_Click(object sender, EventArgs e)
         {
             stagePanel.LayerInfo = new StageLayer(txtStage.Text , m_main );
+            stagePanel.Invalidate();
         }
 
         private void cmbStageList_SelectedIndexChanged(object sender, EventArgs e)
@@ -139,6 +136,8 @@ namespace SpriteTool.Control
                     control.Anchor.LoadBmp(m_main, control.Sprite);                       
                 }
                 stagePanel.Invalidate();
+
+                txtStage.Text = stagePanel.LayerInfo.Name;
             }
         }
 
@@ -153,77 +152,22 @@ namespace SpriteTool.Control
             }
         }
 
-        private bool CanControlAdd( bool isLabel = false )
-        {
-            if (stagePanel.LayerInfo == null)
-            {
-                MessageBox.Show("선택된 StageLayer 가 없습니다.");
-                return false;
-            }
-            if ( stagePanel.SelectedControls == null)
-            {
-                MessageBox.Show("선택된 Control 이 존재하지 않습니다.");
-                return false;
-            }
-            if (isLabel != false)
-            {
-                if (m_main.SelectSprite == null || m_main.SelectIndex < 0)
-                {
-                    MessageBox.Show("선택된 이미지가 존재하지 않습니다.");
-                    return false;
-                }
-            }
-            return true;
-        }
-
-
         // Create Control
         private void panelCreateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (CanControlAdd() == false)
-                return;
-
-            TPoint createPos = new TPoint(createMenuStrip.Left, createMenuStrip.Top);
-            
-            ControlBase control = ControlBase.CreateControl(ControlType.Panel);
-            control.Init(m_main.SelectSprite, m_main.SelectIndex);
-            control.Anchor.LoadBmp(m_main, control.Sprite);
-
-            ControlContainer container = stagePanel.LayerInfo.FindContainer(createPos);
-            
-            control.Anchor.Position = new TPoint(createMenuStrip.Left, createMenuStrip.Top) - container.AbsolutePosition;
-            container.Add(control);
-
-            m_bModify = true;
-            stagePanel.Invalidate();
+            m_stateManager.ChangeState(StateType.CreatePanel);           
         }
 
         private void labelCreateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (CanControlAdd( true ) == false)
-                return;
-
-            ControlBase control = ControlBase.CreateControl(ControlType.Label);
-
-            control.Anchor.LoadBmp(m_main,control.Sprite);
-
-            m_bModify = true;
-            stagePanel.Invalidate();
+            m_stateManager.ChangeState(StateType.CreateLabel);            
         }
 
         private void buttonCreateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (CanControlAdd() == false)
-                return;
-            ControlBase control = ControlBase.CreateControl(ControlType.Button);
-            control.Init(m_main.SelectSprite, m_main.SelectIndex);
-            control.Anchor.LoadBmp(m_main, control.Sprite);
-
-            m_bModify = true;
-            stagePanel.Invalidate();
+            m_stateManager.ChangeState(StateType.CreatePanel);            
         }
-
-
+        
         private void btnCreateForm_Click(object sender, EventArgs e)
         {
             if (stagePanel.LayerInfo == null)
@@ -243,7 +187,6 @@ namespace SpriteTool.Control
 
             stagePanel.LayerInfo.AddForm(control);
 
-            m_bModify = true;
             stagePanel.Invalidate();
         }
 

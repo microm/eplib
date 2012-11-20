@@ -12,6 +12,7 @@ using Tool.TSystem;
 using System.Drawing.Drawing2D;
 using SpriteTool.Helper;
 using SpriteTool.Data.Control;
+using SpriteTool.State;
 
 namespace SpriteTool.Control
 {    
@@ -19,7 +20,7 @@ namespace SpriteTool.Control
     {
         public const int _controlID = 6;
 
-        private Main m_main;        
+        private Main m_main;  
         private TPoint m_center;        
         
         private StageLayer m_layerInfo;
@@ -45,6 +46,11 @@ namespace SpriteTool.Control
                 m_guidTabSize = value;                
             }
         }
+
+        public Main Main
+        {
+            get { return m_main; }
+        }      
 
         public ControlContainer ContainerControl
         {
@@ -121,9 +127,7 @@ namespace SpriteTool.Control
             TPoint mousePos = new TPoint(e.X, e.Y);
             
             m_mouseDragRect.Position = mousePos;
-
             m_drag = true;
-
             if (LayerInfo != null)
             {
                 m_containerControl = LayerInfo.FindContainer(mousePos);
@@ -156,6 +160,11 @@ namespace SpriteTool.Control
             if (MouseDragRect.Width > 0 && MouseDragRect.Height > 0)
             {
                 ControlContainer container = m_layerInfo.FindContainer( m_mouseDragRect.Position );
+                if (container == null)
+                {
+                    return new List<ControlBase>();
+                }
+
                 return container.ControlInRect(m_mouseDragRect);
             }
             return new List<ControlBase>();
@@ -166,11 +175,14 @@ namespace SpriteTool.Control
             Graphics grfx = pe.Graphics;
             DrawGrid(grfx);
 
-            if ( m_drag && MouseDragRect.Width > 0 && MouseDragRect.Height > 0 )
+            if (m_drag && m_form.StateManager.CurrentState is IdleState)
             {
-                Pen penDrag = new Pen(Define.DragLineColor);
-                penDrag.DashStyle = DashStyle.Dot;
-                grfx.DrawRectangle(penDrag, new Rectangle(MouseDragRect.Left, MouseDragRect.Top, MouseDragRect.Width, MouseDragRect.Height));
+                if ( MouseDragRect.Width > 0 && MouseDragRect.Height > 0 )
+                {
+                    Pen penDrag = new Pen(Define.DragLineColor);
+                    penDrag.DashStyle = DashStyle.Dot;
+                    grfx.DrawRectangle(penDrag, new Rectangle(MouseDragRect.Left, MouseDragRect.Top, MouseDragRect.Width, MouseDragRect.Height));
+                }
             }
 
             if ( m_form == null || LayerInfo == null)
@@ -178,7 +190,8 @@ namespace SpriteTool.Control
                 base.OnPaint(pe);
                 return;
             }
-            LayerInfo.Draw(grfx);                                
+            LayerInfo.Draw(grfx);
+            m_modifyController.Draw(grfx);
         }             
 
         public void ResizePanel()

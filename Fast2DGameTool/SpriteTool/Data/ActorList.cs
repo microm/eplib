@@ -12,7 +12,14 @@ namespace SpriteTool.Data
     {
         private List<ActorInfo> m_actorlist;
         public int _version;
-
+        private bool m_bModify = false;
+        
+        public bool Modify
+        {
+            get { return m_bModify; }
+            set { m_bModify = value; }
+        }
+        
         public List<ActorInfo> Actors
         {
             get { return m_actorlist; }
@@ -36,12 +43,16 @@ namespace SpriteTool.Data
 
             m_actorlist.Add(newActor);
 
+            m_bModify = true;
+
             return newActor;
         }
 
         public void Delete(ActorInfo unit)
         {
             m_actorlist.Remove(unit);
+
+            m_bModify = true;
         }
 
         public bool IsExist(string name)
@@ -104,6 +115,8 @@ namespace SpriteTool.Data
             }
             writer.WriteEndElement();
             writer.WriteEndDocument();
+
+            m_bModify = false;
         }
     }
 }

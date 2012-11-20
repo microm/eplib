@@ -11,14 +11,14 @@ namespace SpriteTool.Data
 {
     public  class SpriteMap
     {
-        public enum E_Entity
+        public enum E_Entity : int
         {
-            Item,
-            Actor,
-            Effect,
-            BackGround,
-            UI,
-            Max,
+            Item = 0,
+            Actor = 1,
+            Effect = 2,
+            BackGround = 3,
+            UI = 4, 
+            Max = 5,
         }
 
         private List<SpriteInfo>[] m_spriteCate;

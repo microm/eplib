@@ -37,13 +37,13 @@ namespace SpriteTool.Helper
             return false;
         }
 
-        public void Draw(Graphics renderer)
+        public void Draw(Graphics g)
         {
             if (m_anchors.Count == 0) return;
 
             foreach (Anchors anchor in m_anchors)
             {
-                anchor.Draw(renderer);
+                anchor.Draw(g);
             }
 
             Refresh();
@@ -63,7 +63,7 @@ namespace SpriteTool.Helper
             {
                 if (anchor.Control is ControlContainer)
                 {
-                    if (anchor.Infos[Anchors.NumberOfMoveAnchor].rect.Has(position))
+                    if (anchor.MoveAnchor.rect.Has(position))
                         return true;
 
                     continue;

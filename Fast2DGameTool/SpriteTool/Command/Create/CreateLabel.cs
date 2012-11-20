@@ -19,6 +19,11 @@ namespace SpriteTool.Command.Create
         {
         }
 
+        public override bool CheckImage // 이미지를 필요로 하나 체크
+        {
+            get { return false; }
+        }
+
         public override string Name
         {
             get { return "CreateLabel"; }
@@ -26,13 +31,13 @@ namespace SpriteTool.Command.Create
 
         public override ICommand Clone()
         {
-            return new CreateLabel(m_editor, StartPosition, EndPosition, m_createControl);
+            return new CreateLabel(m_editPanel, StartPosition, EndPosition, m_createControl);
         }
 
         protected override ControlBase CreateControl()
         {
-            if (m_editor.LayerInfo == null) return null;
-            return m_editor.LayerInfo.CreateControl(ControlType.Label, StartPosition, EndPosition);
+            if (m_editPanel.LayerInfo == null) return null;
+            return m_editPanel.LayerInfo.CreateControl(ControlType.Label, StartPosition, EndPosition);
         }
     }
 }
