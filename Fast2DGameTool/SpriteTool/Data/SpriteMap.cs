@@ -97,7 +97,7 @@ namespace SpriteTool.Data
             SpriteInfo newUnit = new SpriteInfo();
 
             newUnit.Name = name;
-            newUnit.Path = path;         
+            newUnit.Path = ((E_Entity)cate).ToString() +"/"+ path;         
 
             m_spriteCate[cate].Add(newUnit);
 
@@ -122,7 +122,7 @@ namespace SpriteTool.Data
             foreach (XmlNode node in cateNode)
             {
                 string name = GenericXmlReader.ReadStringAttribute(node, "name");
-                int index = GenericXmlReader.ReadIntAttribute(node, "index");
+                int cate = GenericXmlReader.ReadIntAttribute(node, "index");
 
                 XmlNodeList spriteNode = node.SelectNodes("sprite");
 
@@ -130,14 +130,19 @@ namespace SpriteTool.Data
                 {
                     SpriteInfo sprite = new SpriteInfo();
                     sprite.Read(snode);
-
-                    m_spriteCate[index].Add(sprite);
+                    sprite.Cate = (E_Entity)cate;
+                    //sprite.Path = ((E_Entity)cate).ToString() + "/" + sprite.Path;
+                    m_spriteCate[cate].Add(sprite);
                 }
             }
         }
 
         public void Write(XmlWriter writer)
-        {           
+        {
+            writer.WriteStartDocument();
+
+            writer.WriteStartElement("SpriteList");
+            GenericXmlWriter.WriteAttribute(writer, "version", _version);
 
             for(int i = 0; i < m_spriteCate.Length; ++i)
             {
@@ -152,6 +157,9 @@ namespace SpriteTool.Data
 
                 writer.WriteEndElement();
             }
+            writer.WriteEndElement();
+
+            writer.WriteEndDocument();
         }
     }
 

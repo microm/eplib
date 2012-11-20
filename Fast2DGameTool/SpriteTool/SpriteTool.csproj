@@ -62,6 +62,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command\BaseCreateControl.cs" />
+    <Compile Include="Command\CopyControl.cs" />
+    <Compile Include="Command\Create\CreateButton.cs" />
+    <Compile Include="Command\Create\CreateLabel.cs" />
+    <Compile Include="Command\Create\CreatePanel.cs" />
+    <Compile Include="Command\CutControl.cs" />
+    <Compile Include="Command\MoveControl.cs" />
+    <Compile Include="Command\PasteControl.cs" />
+    <Compile Include="Command\RemoveControl.cs" />
+    <Compile Include="Command\ResizeControl.cs" />
     <Compile Include="Control\AboutForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -117,6 +127,11 @@
     <Compile Include="Data\StageLayer.cs" />
     <Compile Include="Data\SpriteMap.cs" />
     <Compile Include="Data\SpriteInfo.cs" />
+    <Compile Include="Define.cs" />
+    <Compile Include="Helper\Anchors.cs" />
+    <Compile Include="Helper\Clipboard.cs" />
+    <Compile Include="Helper\Controls.cs" />
+    <Compile Include="Helper\ModifyController.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="Control\AniSpriteCtrl.cs">
       <SubType>UserControl</SubType>
@@ -143,6 +158,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource3.resx</DependentUpon>
     </Compile>
+    <Compile Include="State\AbstractState.cs" />
+    <Compile Include="State\CreateControlState.cs" />
+    <Compile Include="State\IdleState.cs" />
+    <Compile Include="State\MoveState.cs" />
+    <Compile Include="State\ResizeControlState.cs" />
+    <Compile Include="State\StateManager.cs" />
     <EmbeddedResource Include="Control\AboutForm.resx">
       <DependentUpon>AboutForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -237,6 +258,7 @@
     <Content Include="resource\save.bmp" />
     <Content Include="resource\table_borders_16x16.gif" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

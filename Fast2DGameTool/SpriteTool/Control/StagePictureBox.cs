@@ -10,6 +10,8 @@ using Point = System.Drawing.Point;
 using Tool.TSystem.Primitive;
 using Tool.TSystem;
 using System.Drawing.Drawing2D;
+using SpriteTool.Helper;
+using SpriteTool.Data.Control;
 
 namespace SpriteTool.Control
 {    
@@ -17,20 +19,24 @@ namespace SpriteTool.Control
     {
         public const int _controlID = 6;
 
-        private Main m_main;
-        private Pen m_linePen = new Pen(Brushes.Black);
+        private Main m_main;        
+        private TPoint m_center;        
         
-        private bool m_bPlay = false;
-        private Point m_center;        
+        private StageLayer m_layerInfo;
+        private ControlContainer m_containerControl;
         
-        private DevImage m_dImage;
-
-        private ControlBase m_selectControl;
-        private StageForm m_form;
-        private Pen m_regionPen = new Pen(Brushes.Black);        
+        private readonly ModifyController m_modifyController;
+        private readonly Controls m_selectedControls;
+        
+        private StageForm m_form;   
         
         private bool m_bGuidLine = true;
         private int m_guidTabSize = 20;
+
+        private Rect m_mouseDragRect = new Rect(0, 0, 0, 0);
+        private bool m_drag = false;
+
+        public delegate void SelectControlEvent();
 
         public int GuidTabSize
         {
@@ -40,10 +46,32 @@ namespace SpriteTool.Control
             }
         }
 
-        public ControlBase SelectControl
+        public ControlContainer ContainerControl
         {
-            get { return m_selectControl; }
-            set { m_selectControl = value; }
+            get { return m_containerControl; }
+            set { m_containerControl = value; }
+        }
+
+        public StageLayer LayerInfo
+        {
+            get { return m_layerInfo; }
+            set { m_layerInfo = value; }
+        }
+
+        public Rect MouseDragRect
+        {
+            get { return m_mouseDragRect; }
+            set { m_mouseDragRect = value; }
+        }
+
+        public ModifyController ModifyController
+        {
+            get { return m_modifyController; }
+        }
+
+        public Controls SelectedControls
+        {
+            get { return m_selectedControls; }
         }
         
         public StagePictureBox()
@@ -51,22 +79,18 @@ namespace SpriteTool.Control
             SetStyle(ControlStyles.Selectable, true);
             BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 
-            SizeMode = PictureBoxSizeMode.CenterImage;
-            m_regionPen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+            m_selectedControls = new Controls();
+            m_modifyController = new ModifyController(m_selectedControls);
         }
 
         internal void Init( Main main,StageForm form )
         {
             m_main = main;
-            m_form = form;
-            if (m_dImage == null)
-            {
-                m_dImage = new DevImage(100, 100);
-            }
-            m_center = new Point(Width / 2, Height / 2);
+            m_form = form;           
+            m_center = new TPoint(Width / 2, Height / 2);
         }
 
-        public Point Center
+        public TPoint Center
         {
             get { return m_center; }
         }
@@ -77,36 +101,89 @@ namespace SpriteTool.Control
             set { m_bGuidLine = value; }
         }
 
-        public bool Play
+        public event SelectControlEvent SelectControlEventHandler;
+
+        public void SelectedControlAdd(ControlBase control)
         {
-            get { return m_bPlay; }
-            set { m_bPlay = value; }
-        }             
-                        
+            if (control.Parent != m_containerControl) 
+                return;
+
+            m_selectedControls.Add(control);
+            m_modifyController.Refresh();
+
+            if (SelectControlEventHandler != null) SelectControlEventHandler();
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+
+            TPoint mousePos = new TPoint(e.X, e.Y);
+            
+            m_mouseDragRect.Position = mousePos;
+
+            m_drag = true;
+
+            if (LayerInfo != null)
+            {
+                m_containerControl = LayerInfo.FindContainer(mousePos);
+            }            
+            Focus();
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+            m_drag = false;
+            Invalidate();
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            TPoint mousePos = new TPoint(e.X, e.Y);
+
+            if (m_drag)
+            {
+                m_mouseDragRect.Right = e.X;
+                m_mouseDragRect.Bottom = e.Y;
+                Invalidate();
+            }             
+        }
+
+        public List<ControlBase> GetDragControls()
+        {
+            if (MouseDragRect.Width > 0 && MouseDragRect.Height > 0)
+            {
+                ControlContainer container = m_layerInfo.FindContainer( m_mouseDragRect.Position );
+                return container.ControlInRect(m_mouseDragRect);
+            }
+            return new List<ControlBase>();
+        }
+                
         protected override void OnPaint(PaintEventArgs pe)
         {
             Graphics grfx = pe.Graphics;
             DrawGrid(grfx);
 
-            if ( m_form == null || m_form.LayerInfo == null)
+            if (m_drag && MouseDragRect.Width > 0 && MouseDragRect.Height > 0)
+            {
+                Pen penDrag = new Pen(Define.DragLineColor);
+                penDrag.DashStyle = DashStyle.Dot;
+                grfx.DrawRectangle(penDrag, new Rectangle(MouseDragRect.Left, MouseDragRect.Top, MouseDragRect.Width, MouseDragRect.Height));
+            }
+
+            if ( m_form == null || LayerInfo == null)
             {
                 base.OnPaint(pe);
                 return;
             }
-            Pen selectPen = new Pen(Brushes.Red);
-
-            m_form.LayerInfo.Form.Draw(grfx);
-
-            if (m_bGuidLine == true )
-            {
-                grfx.DrawRectangle(selectPen, m_selectControl.DrawRect);            
-            }                  
-        }       
-      
+            LayerInfo.Draw(grfx);                                
+        }             
 
         public void ResizePanel()
         {
-            m_center = new Point(Width / 2, Height / 2);
+            m_center = new TPoint(Width / 2, Height / 2);
             Invalidate();
         }
 
@@ -116,9 +193,9 @@ namespace SpriteTool.Control
                 return;
     
             Pen penStroke = new Pen(Brushes.Black);
-            penStroke.DashStyle = System.Drawing.Drawing2D.DashStyle.DashDot;
+            penStroke.DashStyle = DashStyle.DashDot;
             Pen penThin = new Pen(Brushes.Silver);
-            penThin.DashStyle = System.Drawing.Drawing2D.DashStyle.Dot;
+            penThin.DashStyle = DashStyle.Dot;
 
             grfx.DrawLine(penStroke, new Point(0, m_center.Y), new Point(Width, m_center.Y));
             grfx.DrawLine(penStroke, new Point(m_center.X, 0), new Point(m_center.X, Height));

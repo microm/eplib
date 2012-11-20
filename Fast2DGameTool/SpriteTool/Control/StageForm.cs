@@ -10,6 +10,10 @@ using System.Windows.Forms;
 using Tool.TSystem.Primitive;
 using SpriteTool.Data;
 using Tool.TSystem;
+using SpriteTool.Data.Control;
+using Tool.TSystem.Pattern;
+using SpriteTool.State;
+using Tool.TSystem.Basis;
 
 namespace SpriteTool.Control
 {
@@ -19,11 +23,14 @@ namespace SpriteTool.Control
         
         public List<string> m_resNames = new List<string>();
         public List<TPoint> m_resolutions = new List<TPoint>();
-        private StageLayer m_layerInfo;       
-        private TPoint m_prevPos;
-
+           
         private bool m_bModify = false;
-        private bool m_drag = false;
+
+        private readonly CommandManager m_commandManager = new CommandManager();
+        private readonly StateManager m_stateManager;
+
+        private readonly MouseEventTranslator m_mouseTranslator = new MouseEventTranslator();
+        private readonly KeyboardEvent m_keyEvent = new KeyboardEvent();
 
         public StageForm()
         {
@@ -41,20 +48,16 @@ namespace SpriteTool.Control
                 cmbResolution.Items.Add(res);
             }
 
-            picDraw.GuidTabSize = 50;
-        }
+            stagePanel.GuidTabSize = 50;
 
-        public StageLayer LayerInfo
-        {
-            get { return m_layerInfo; }
-            set { m_layerInfo = value; }
+            stagePanel.SelectControlEventHandler += OnSelectControl;
+            m_stateManager = new StateManager(m_commandManager, stagePanel);
         }
 
         internal void Init(Main main)
         {       
-
             m_main = main;
-            picDraw.Init( m_main,this );
+            stagePanel.Init( m_main,this );
 
             InitStageList();
         }
@@ -70,15 +73,27 @@ namespace SpriteTool.Control
             Close();
         }
 
+        private void OnSelectControl()
+        {
+            if ( stagePanel.SelectedControls.Count == 1 )
+            {
+                objPropertyGrid.SelectedObject = stagePanel.SelectedControls[0];
+            }
+            else
+            {
+                objPropertyGrid.SelectedObject = null;
+            }            
+        }
+
         private void chkGuide_CheckedChanged(object sender, EventArgs e)
         {
-            picDraw.GuidLine = chkGuide.Checked;
-            picDraw.Invalidate();
+            stagePanel.GuidLine = chkGuide.Checked;
+            stagePanel.Invalidate();
         }
 
         private void StageForm_Resize(object sender, EventArgs e)
         {
-            picDraw.ResizePanel();
+            stagePanel.ResizePanel();
         }
 
         private void cmbResolution_SelectedIndexChanged(object sender, EventArgs e)
@@ -89,66 +104,14 @@ namespace SpriteTool.Control
             this.Size = new Size(m_resolutions[cmbResolution.SelectedIndex].X + 200 , m_resolutions[cmbResolution.SelectedIndex].Y + 45 );
         }
       
-        private void picDraw_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (LayerInfo == null)
-                return;
-
-            TPoint mousePos = new TPoint(e.X, e.Y);
-
-            ControlBase control = LayerInfo.Form.GetControlByPoint(mousePos);
-            if (control != null)
-            {
-                picDraw.SelectControl = control;
-                objPropertyGrid.SelectedObject = control;
-                m_drag = true;
-            }           
-
-            m_prevPos = mousePos;
-            picDraw.Focus();
-        }
-
-        private void picDraw_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (LayerInfo == null)
-                return;
-
-            TPoint mousePos = new TPoint(e.X, e.Y);
-
-            if (m_prevPos == mousePos)
-                return;
-
-            TPoint pos = new TPoint(e.X - picDraw.Center.X, e.Y - picDraw.Center.Y);
-
-            if (picDraw.SelectControl != null && m_drag)
-            {
-                //TPoint startPos = picDraw.SelectControl.GetStartPos(picDraw);         
-                picDraw.SelectControl.Anchor.Position = pos;
-                m_bModify = true;
-            }
-            picDraw.Invalidate();
-            m_prevPos = mousePos;
-        }
-
-        private void picDraw_MouseUp(object sender, MouseEventArgs e)
-        {
-            m_drag = false;
-        }
-
-        private void picDraw_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            if (LayerInfo == null)
-                return;
-        }
-
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (LayerInfo == null)
+            if (stagePanel.LayerInfo == null)
                 return;
 
             if (m_bModify)
             {
-                LayerInfo.Save(m_main);
+                stagePanel.LayerInfo.Save(m_main);
 
                 InitStageList();
                 m_bModify = false;
@@ -157,7 +120,7 @@ namespace SpriteTool.Control
 
         private void btnStageCreate_Click(object sender, EventArgs e)
         {
-            LayerInfo = new StageLayer( txtStage.Text );
+            stagePanel.LayerInfo = new StageLayer(txtStage.Text , m_main );
         }
 
         private void cmbStageList_SelectedIndexChanged(object sender, EventArgs e)
@@ -166,16 +129,16 @@ namespace SpriteTool.Control
                 return;
 
             // Load Stage
-            LayerInfo = new StageLayer("");
-            if (LayerInfo.Load(m_main, cmbStageList.Items[cmbStageList.SelectedIndex].ToString()))
+            stagePanel.LayerInfo = new StageLayer("",m_main);
+            if (stagePanel.LayerInfo.Load(m_main, cmbStageList.Items[cmbStageList.SelectedIndex].ToString()))
             {
                 List<ControlBase> allControl = new List<ControlBase>();
-                LayerInfo.Form.CollectControl(allControl);
+                stagePanel.LayerInfo.Form.CollectControl(allControl);
                 foreach (ControlBase control in allControl)
                 {
                     control.Anchor.LoadBmp(m_main, control.Sprite);                       
                 }
-                picDraw.Invalidate();
+                stagePanel.Invalidate();
             }
         }
 
@@ -192,12 +155,12 @@ namespace SpriteTool.Control
 
         private bool CanControlAdd( bool isLabel = false )
         {
-            if (LayerInfo == null)
+            if (stagePanel.LayerInfo == null)
             {
                 MessageBox.Show("선택된 StageLayer 가 없습니다.");
                 return false;
             }
-            if ( picDraw.SelectControl == null)
+            if ( stagePanel.SelectedControls == null)
             {
                 MessageBox.Show("선택된 Control 이 존재하지 않습니다.");
                 return false;
@@ -213,16 +176,26 @@ namespace SpriteTool.Control
             return true;
         }
 
+
+        // Create Control
         private void panelCreateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (CanControlAdd() == false)
                 return;
-            ControlBase control = ControlBase.CreateControl(ControlType.Panel);
 
+            TPoint createPos = new TPoint(createMenuStrip.Left, createMenuStrip.Top);
+            
+            ControlBase control = ControlBase.CreateControl(ControlType.Panel);
+            control.Init(m_main.SelectSprite, m_main.SelectIndex);
             control.Anchor.LoadBmp(m_main, control.Sprite);
 
+            ControlContainer container = stagePanel.LayerInfo.FindContainer(createPos);
+            
+            control.Anchor.Position = new TPoint(createMenuStrip.Left, createMenuStrip.Top) - container.AbsolutePosition;
+            container.Add(control);
+
             m_bModify = true;
-            picDraw.Invalidate();
+            stagePanel.Invalidate();
         }
 
         private void labelCreateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -235,7 +208,7 @@ namespace SpriteTool.Control
             control.Anchor.LoadBmp(m_main,control.Sprite);
 
             m_bModify = true;
-            picDraw.Invalidate();
+            stagePanel.Invalidate();
         }
 
         private void buttonCreateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -243,17 +216,17 @@ namespace SpriteTool.Control
             if (CanControlAdd() == false)
                 return;
             ControlBase control = ControlBase.CreateControl(ControlType.Button);
-
+            control.Init(m_main.SelectSprite, m_main.SelectIndex);
             control.Anchor.LoadBmp(m_main, control.Sprite);
 
             m_bModify = true;
-            picDraw.Invalidate();
+            stagePanel.Invalidate();
         }
 
 
         private void btnCreateForm_Click(object sender, EventArgs e)
         {
-            if (LayerInfo == null)
+            if (stagePanel.LayerInfo == null)
             {
                 MessageBox.Show("선택된 StageLayer 가 없습니다.");
                 return;
@@ -265,11 +238,46 @@ namespace SpriteTool.Control
             }
 
             ControlBase control = ControlBase.CreateControl(ControlType.Form);
-
+            control.Init(m_main.SelectSprite, m_main.SelectIndex);
             control.Anchor.LoadBmp(m_main, control.Sprite);
 
+            stagePanel.LayerInfo.AddForm(control);
+
             m_bModify = true;
-            picDraw.Invalidate();
+            stagePanel.Invalidate();
+        }
+
+        private void stagePanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            MouseEvent mouseEvent = m_mouseTranslator.MouseDown(e);
+            OnMouseEvent(mouseEvent);
+        }
+
+        private void stagePanel_MouseMove(object sender, MouseEventArgs e)
+        {
+            MouseEvent mouseEvent = m_mouseTranslator.MouseMove(e);
+            OnMouseEvent(mouseEvent);
+        }
+
+        private void stagePanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            MouseEvent mouseEvent = m_mouseTranslator.MouseUp(e);
+            OnMouseEvent(mouseEvent);
+        }
+
+        public void OnMouseEvent(MouseEvent mouseEvent)
+        {
+            if (mouseEvent == null) return;
+            m_stateManager.CurrentState.OnMouseEvent(mouseEvent);
+        }
+
+        protected override bool ProcessKeyPreview(ref Message m)
+        {
+            if (KeyEventTranslator.MessageProc(m.Msg, m.WParam.ToInt32(), m.LParam.ToInt32(), m_keyEvent))
+            {
+                m_stateManager.CurrentState.OnKeyboardEvent(m_keyEvent);
+            }
+            return base.ProcessKeyPreview(ref m);
         }
 
     }

@@ -8,7 +8,7 @@ using System.IO;
 
 namespace SpriteTool.Data
 {
-    class ActorList
+    public class ActorList
     {
         private List<ActorInfo> m_actorlist;
         public int _version;
@@ -32,7 +32,7 @@ namespace SpriteTool.Data
             newActor.Name = info.Name;
             newActor.SpriteInfo = info;
 
-            newActor.Anchors.Add(new ActorInfo.Anchor(0));
+            newActor.Anchors.Add(new AnchorInfo(0));
 
             m_actorlist.Add(newActor);
 
@@ -89,11 +89,21 @@ namespace SpriteTool.Data
         }
 
         public void Write(XmlWriter writer)
-        {  
+        {
+            writer.WriteStartDocument();
+
+            //Write the ProcessingInstruction node.
+            //String PItext = "type='text/xsl' href='book.xsl'";
+            //writer.WriteProcessingInstruction("xml-stylesheet", PItext);
+
+            writer.WriteStartElement("ActorList");
+            GenericXmlWriter.WriteAttribute(writer, "version", _version);
             foreach (ActorInfo actor in m_actorlist)
             {
                 actor.Write(writer);
             }
+            writer.WriteEndElement();
+            writer.WriteEndDocument();
         }
     }
 }

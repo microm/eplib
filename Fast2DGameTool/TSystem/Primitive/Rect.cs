@@ -96,6 +96,10 @@ namespace Tool.TSystem.Primitive
         public TPoint Position
         {
             get { return new TPoint(left, top); }
+            set { 
+                left = value.X;
+                top = value.Y;
+            }
         }
 
         [Browsable(false)]

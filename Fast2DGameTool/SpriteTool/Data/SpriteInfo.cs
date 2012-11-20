@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using Tool.TSystem.Primitive;
-using TPoint = Tool.TSystem.Primitive.Point;
 using Tool.TSystem.IO;
 using System.Xml;
 
@@ -19,21 +18,26 @@ namespace SpriteTool.Data
     public class SpriteInfo
     {
         private string m_name;
-        public string m_path;     
+        private SpriteTool.Data.SpriteMap.E_Entity m_cate;       
+        private string m_path;     
 
         private bool m_hasColorKey;
         private Color m_colorKey;
         private float m_speed;
         private bool m_isCircle;
-        private bool m_isParts;
-       
+        private bool m_isParts;     
         
-        private List<ImgData> m_imgList;        
-        
+        private List<ImgData> m_imgList;                
         public List<ImgData> ImgList
         {
             get { return m_imgList; }
             set { m_imgList = value; }
+        }
+
+        public SpriteTool.Data.SpriteMap.E_Entity Cate
+        {
+            get { return m_cate; }
+            set { m_cate = value; }
         }
 
         public string Name

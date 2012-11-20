@@ -35,7 +35,7 @@
             this.chkGuide = new System.Windows.Forms.CheckBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
-            this.picDraw = new SpriteTool.Control.StagePictureBox();
+            this.stagePanel = new SpriteTool.Control.StagePictureBox();
             this.createMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.panelCreateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelCreateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -43,7 +43,7 @@
             this.btnCreateForm = new System.Windows.Forms.Button();
             this.txtStage = new System.Windows.Forms.TextBox();
             this.btnStageCreate = new System.Windows.Forms.Button();
-            this.objPropertyGrid = new System.Windows.Forms.PropertyGrid();
+            this.objPropertyGrid = new SpriteTool.Control.PropertyGridEx(this.components);
             this.cmbStageList = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -54,7 +54,7 @@
             this.splitContainer1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picDraw)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.stagePanel)).BeginInit();
             this.createMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -90,7 +90,7 @@
             this.tableLayoutPanel1.ColumnCount = 1;
             this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.Controls.Add(this.panel1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.picDraw, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.stagePanel, 0, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
@@ -147,26 +147,25 @@
             this.btnClose.UseVisualStyleBackColor = true;
             this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
             // 
-            // picDraw
+            // stagePanel
             // 
-            this.picDraw.BackColor = System.Drawing.Color.White;
-            this.picDraw.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.picDraw.ContextMenuStrip = this.createMenuStrip;
-            this.picDraw.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.picDraw.GuidLine = true;
-            this.picDraw.GuidTabSize = 20;
-            this.picDraw.Location = new System.Drawing.Point(3, 3);
-            this.picDraw.Name = "picDraw";
-            this.picDraw.Play = false;
-            this.picDraw.SelectControl = null;
-            this.picDraw.Size = new System.Drawing.Size(577, 505);
-            this.picDraw.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
-            this.picDraw.TabIndex = 1;
-            this.picDraw.TabStop = false;
-            this.picDraw.MouseDown += new System.Windows.Forms.MouseEventHandler(this.picDraw_MouseDown);
-            this.picDraw.MouseMove += new System.Windows.Forms.MouseEventHandler(this.picDraw_MouseMove);
-            this.picDraw.MouseUp += new System.Windows.Forms.MouseEventHandler(this.picDraw_MouseUp);
-            this.picDraw.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.picDraw_PreviewKeyDown);
+            this.stagePanel.BackColor = System.Drawing.Color.White;
+            this.stagePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.stagePanel.ContainerControl = null;
+            this.stagePanel.ContextMenuStrip = this.createMenuStrip;
+            this.stagePanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.stagePanel.GuidLine = true;
+            this.stagePanel.GuidTabSize = 20;
+            this.stagePanel.LayerInfo = null;
+            this.stagePanel.Location = new System.Drawing.Point(3, 3);
+            this.stagePanel.Name = "stagePanel";
+            this.stagePanel.Size = new System.Drawing.Size(577, 505);
+            this.stagePanel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.stagePanel.TabIndex = 1;
+            this.stagePanel.TabStop = false;
+            this.stagePanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.stagePanel_MouseDown);
+            this.stagePanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.stagePanel_MouseMove);
+            this.stagePanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.stagePanel_MouseUp);
             // 
             // createMenuStrip
             // 
@@ -291,7 +290,7 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picDraw)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.stagePanel)).EndInit();
             this.createMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -305,11 +304,11 @@
         private System.Windows.Forms.CheckBox chkGuide;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnClose;
-        private StagePictureBox picDraw;
+        private StagePictureBox stagePanel;
         private System.Windows.Forms.ComboBox cmbResolution;
         private System.Windows.Forms.TextBox txtStage;
         private System.Windows.Forms.Button btnStageCreate;
-        private System.Windows.Forms.PropertyGrid objPropertyGrid;
+        private PropertyGridEx objPropertyGrid;
         private System.Windows.Forms.ComboBox cmbStageList;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label1;
