@@ -9,12 +9,12 @@ namespace SpriteTool.Command.Create
 {
     public class CreateLabel : BaseCreateControl
     {
-        public CreateLabel(StagePictureBox editor)
+        public CreateLabel(StageBox editor)
             : base(editor)
         {
         }
 
-        private CreateLabel(StagePictureBox editor, TPoint startPosition, TPoint endPosition, ControlBase control)
+        private CreateLabel(StageBox editor, TPoint startPosition, TPoint endPosition, ControlBase control)
             : base( editor,startPosition,endPosition,control)
         {
         }

@@ -13,14 +13,14 @@ namespace SpriteTool.State
 {
     public class IdleState : AbstractState
     {
-        private readonly StagePictureBox m_editor;
+        private readonly StageBox m_editor;
         private readonly StateManager m_stateManager;
         private readonly CommandManager m_commandManager;
 
         private readonly Clipboard m_clipboard = new Clipboard();
         private TPoint m_mouseDragStartPoint = new TPoint(0, 0);
 
-        public IdleState(StagePictureBox editor, StateManager stateManager, CommandManager commandManager)
+        public IdleState(StageBox editor, StateManager stateManager, CommandManager commandManager)
         {
             m_editor = editor;
             m_stateManager = stateManager;

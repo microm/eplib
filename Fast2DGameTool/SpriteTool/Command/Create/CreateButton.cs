@@ -9,12 +9,12 @@ namespace SpriteTool.Command.Create
 {
     public class CreateButton : BaseCreateControl
     {
-        public CreateButton(StagePictureBox editor)
+        public CreateButton(StageBox editor)
             : base(editor)
         {
         }
 
-        private CreateButton(StagePictureBox editor, TPoint startPosition, TPoint endPosition, ControlBase createdControl)
+        private CreateButton(StageBox editor, TPoint startPosition, TPoint endPosition, ControlBase createdControl)
             : base(editor, startPosition, endPosition, createdControl)
         {
         }

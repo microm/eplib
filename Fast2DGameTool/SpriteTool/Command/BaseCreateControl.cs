@@ -9,17 +9,17 @@ namespace SpriteTool.Command
 {
     public abstract class BaseCreateControl : ICommand
     {
-        protected readonly StagePictureBox m_editor;
+        protected readonly StageBox m_editor;
         protected TPoint m_startPosition;
         protected TPoint m_endPosition;
         protected ControlBase m_createControl;
 
-        public BaseCreateControl(StagePictureBox editor)
+        public BaseCreateControl(StageBox editor)
         {
             m_editor = editor;
         }
 
-        protected BaseCreateControl(StagePictureBox editor, TPoint startPosition, TPoint endPosition, ControlBase createdControl)
+        protected BaseCreateControl(StageBox editor, TPoint startPosition, TPoint endPosition, ControlBase createdControl)
         {
             m_editor = editor;
             m_startPosition = startPosition;

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--<!DOCTYPE configlist SYSTEM "config.dtd">-->
 <configlist>
-  <path key="Root" name="..\\data" />
+  <path key="Root" name="..\\Assets" />
   <path key="Image" name="image" />
   <path key="Script" name="script" />
   <path key="Sound" name="sound" />

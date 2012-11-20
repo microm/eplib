@@ -35,7 +35,7 @@
             this.chkGuide = new System.Windows.Forms.CheckBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnClose = new System.Windows.Forms.Button();
-            this.stagePanel = new SpriteTool.Control.StagePictureBox();
+            this.stagePanel = new SpriteTool.Control.StageBox();
             this.createMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.panelCreateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.labelCreateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -304,7 +304,7 @@
         private System.Windows.Forms.CheckBox chkGuide;
         private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.Button btnClose;
-        private StagePictureBox stagePanel;
+        private StageBox stagePanel;
         private System.Windows.Forms.ComboBox cmbResolution;
         private System.Windows.Forms.TextBox txtStage;
         private System.Windows.Forms.Button btnStageCreate;

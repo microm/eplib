@@ -9,12 +9,12 @@ namespace SpriteTool.Command.Create
 {
     public class CreatePanel : BaseCreateControl
     {
-        public CreatePanel(StagePictureBox editor)
+        public CreatePanel(StageBox editor)
             :base(editor)
         {
         }
 
-        private CreatePanel(StagePictureBox editor, TPoint startPosition, TPoint endPosition, ControlBase control)
+        private CreatePanel(StageBox editor, TPoint startPosition, TPoint endPosition, ControlBase control)
             :base(editor,startPosition,endPosition,control)
         {
         }

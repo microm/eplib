@@ -87,7 +87,7 @@
     <Compile Include="Control\ActorPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Control\StagePictureBox.cs">
+    <Compile Include="Control\StageBox.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Control\PiecePictureBox.cs">

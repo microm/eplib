@@ -21,10 +21,10 @@ namespace SpriteTool.State
     {
         private AbstractState m_currentState;
         private readonly CommandManager m_commandManager;
-        private readonly StagePictureBox m_editor;
+        private readonly StageBox m_editor;
         private FlagPosition m_flagPosition;
 
-        public StateManager(CommandManager commandManager, StagePictureBox editor)
+        public StateManager(CommandManager commandManager, StageBox editor)
         {
             m_commandManager = commandManager;
             m_editor = editor;
