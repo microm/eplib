@@ -1,9 +1,0 @@
-E:\Android\binary\tool\TSystem.dll.config
-E:\Android\binary\tool\TSystem.dll
-E:\Android\binary\tool\TSystem.pdb
-E:\Android\Work\Fast2DGameTool\bin\TSystem.dll.config
-E:\Android\Work\Fast2DGameTool\bin\TSystem.dll
-E:\Android\Work\Fast2DGameTool\bin\TSystem.pdb
-E:\Android\Work\Fast2DGameTool\TSystem\obj\Debug\ResolveAssemblyReference.cache
-E:\Android\Work\Fast2DGameTool\TSystem\obj\Debug\TSystem.dll
-E:\Android\Work\Fast2DGameTool\TSystem\obj\Debug\TSystem.pdb
